@@ -56,7 +56,7 @@ public class StepperMotor {
         position.addAndGet(steps);
 
         // Calculate the steps that we need, with respect to mitigating rounding errors
-        int roundedSteps = (int) (Math.floor(steps) - Math.floor(startPos);
+        int roundedSteps = (int) (Math.floor(steps) - Math.floor(startPos));
         motor.step(roundedSteps);
     }
 
