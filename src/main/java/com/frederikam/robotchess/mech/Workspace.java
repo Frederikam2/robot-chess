@@ -1,5 +1,6 @@
 package com.frederikam.robotchess.mech;
 
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.RaspiPin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import static com.frederikam.robotchess.Launcher.gpio;
 
 /**
  * High-level wrapper of steppers and the magnet
@@ -19,10 +22,12 @@ public class Workspace {
     private final StepperMotor stepperX;
     private final StepperMotor stepperY;
     private final ExecutorService stepperExecutor = Executors.newFixedThreadPool(2);
+    private final GpioPinDigitalOutput magnet;
 
     public Workspace() {
         stepperX = new StepperMotor(RaspiPin.GPIO_00, RaspiPin.GPIO_01, RaspiPin.GPIO_02, RaspiPin.GPIO_03);
         stepperY = new StepperMotor(RaspiPin.GPIO_04, RaspiPin.GPIO_05, RaspiPin.GPIO_06, RaspiPin.GPIO_07);
+        magnet = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08);
     }
 
     public StepPosition getPosition() {
@@ -41,6 +46,10 @@ public class Workspace {
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void setMagnetEnabled(boolean enabled) {
+        magnet.setState(enabled);
     }
 
 }
