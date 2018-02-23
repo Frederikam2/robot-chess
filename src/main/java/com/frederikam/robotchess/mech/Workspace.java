@@ -35,20 +35,20 @@ public class Workspace {
     }
 
     // Move synchronously with both steppers
-    private void moveSync(StepPosition position) throws InterruptedException {
-        log.info("Moving x: {}, y: {}", position.x, position.y);
+    public void moveToSync(StepPosition position) {
+        log.info("Moving to x: {}, y: {}", position.x, position.y);
         Future futureX = stepperExecutor.submit(() -> stepperX.stepTo(position.x));
         Future futureY = stepperExecutor.submit(() -> stepperY.stepTo(position.y));
 
         try {
             futureX.get();
             futureY.get();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void setMagnetEnabled(boolean enabled) {
+    public void setMagnetEnabled(boolean enabled) {
         magnet.setState(enabled);
     }
 

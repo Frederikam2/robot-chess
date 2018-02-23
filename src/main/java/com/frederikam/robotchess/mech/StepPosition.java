@@ -10,4 +10,16 @@ public class StepPosition {
         this.y = y;
     }
 
+    public StepPosition minus(StepPosition other) {
+        return new StepPosition(x - other.x, y - other.y);
+    }
+
+    public StepPosition plus(StepPosition other) {
+        return new StepPosition(x + other.x, y + other.y);
+    }
+
+    public StepPosition plus(double x, double y) {
+        return new StepPosition(x + this.x, y + this.y);
+    }
+
 }
