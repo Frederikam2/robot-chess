@@ -10,26 +10,22 @@ import static com.frederikam.robotchess.Launcher.gpio;
 
 public class StepperMotor {
 
-    private final GpioPinDigitalOutput pin1;
-    private final GpioPinDigitalOutput pin2;
-    private final GpioPinDigitalOutput pin3;
-    private final GpioPinDigitalOutput pin4;
     private final GpioStepperMotorComponent motor;
     private AtomicDouble position = new AtomicDouble(0);
 
     public StepperMotor(Pin pin1, Pin pin2,
                         Pin pin3, Pin pin4,
                         int stepsPerRevolution) {
-        this.pin1 = gpio.provisionDigitalOutputPin(pin1, PinState.LOW);
-        this.pin2 = gpio.provisionDigitalOutputPin(pin3, PinState.LOW);
-        this.pin3 = gpio.provisionDigitalOutputPin(pin2, PinState.LOW);
-        this.pin4 = gpio.provisionDigitalOutputPin(pin4, PinState.LOW);
+        GpioPinDigitalOutput pin11 = gpio.provisionDigitalOutputPin(pin1, PinState.LOW);
+        GpioPinDigitalOutput pin21 = gpio.provisionDigitalOutputPin(pin3, PinState.LOW);
+        GpioPinDigitalOutput pin31 = gpio.provisionDigitalOutputPin(pin2, PinState.LOW);
+        GpioPinDigitalOutput pin41 = gpio.provisionDigitalOutputPin(pin4, PinState.LOW);
 
         final GpioPinDigitalOutput[] pins = {
-                this.pin1,
-                this.pin2,
-                this.pin3,
-                this.pin4};
+                pin11,
+                pin21,
+                pin31,
+                pin41};
 
         // this will ensure that the motor is stopped when the program terminates
         gpio.setShutdownOptions(true, PinState.LOW, pins);
@@ -60,7 +56,15 @@ public class StepperMotor {
         position.addAndGet(steps);
 
         // Calculate the steps that we need, with respect to mitigating rounding errors
-        int roundedSteps = (int) (Math.floor(steps) - Math.floor(position.get()));
+        int roundedSteps = (int) (Math.floor(steps) - Math.floor(startPos);
         motor.step(roundedSteps);
+    }
+
+    public void stepTo(double newPosition) {
+        step(newPosition - position.get());
+    }
+
+    public double getPosition() {
+        return position.get();
     }
 }
