@@ -40,6 +40,10 @@ public abstract class ChessPiece {
         return position;
     }
 
+    public void setPosition(TilePosition position) {
+        this.position = position;
+    }
+
     public Alignment getAlignment() {
         return alignment;
     }

@@ -1,5 +1,8 @@
 package com.frederikam.robotchess.chess;
 
+import com.frederikam.robotchess.Constants;
+import com.frederikam.robotchess.mech.StepPosition;
+
 import java.util.Objects;
 
 public class TilePosition {
@@ -51,6 +54,13 @@ public class TilePosition {
         TilePosition that = (TilePosition) o;
         return x == that.x &&
                 y == that.y;
+    }
+
+    public StepPosition toStepPosition() {
+        return new StepPosition(
+                Constants.BOARD_BOTTOM_LEFT.x + Constants.TILE_WIDTH*x + Constants.HALF_TILE_WIDTH,
+                Constants.BOARD_BOTTOM_LEFT.y + Constants.TILE_WIDTH*y + Constants.HALF_TILE_WIDTH
+        );
     }
 
     @Override
