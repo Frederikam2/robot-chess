@@ -18,7 +18,7 @@ public class King extends ChessPiece {
     }
 
     @Override
-    char signatureCharacter() {
+    public char signatureCharacter() {
         return 'K';
     }
 }

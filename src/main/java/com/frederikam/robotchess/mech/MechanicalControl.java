@@ -17,9 +17,8 @@ public class MechanicalControl {
     public MechanicalControl(Workspace workspace) {
         this.workspace = workspace;
         executor = Executors.newSingleThreadExecutor(
-                r -> new Thread(r) {{
-                    setName("mechanical-control");
-                }});
+                r -> new Thread(r, "mechanical-control")
+        );
     }
 
     private void submit(Runnable r) {

@@ -34,7 +34,7 @@ public abstract class ChessPiece {
         return !newPos.isOutOfBounds();
     }
 
-    abstract char signatureCharacter();
+    public abstract char signatureCharacter();
 
     public TilePosition getPosition() {
         return position;
