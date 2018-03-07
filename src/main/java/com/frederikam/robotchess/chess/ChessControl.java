@@ -1,6 +1,9 @@
 package com.frederikam.robotchess.chess;
 
+import com.frederikam.robotchess.Launcher;
 import com.frederikam.robotchess.chess.pieces.ChessPiece;
+import com.frederikam.robotchess.mech.DummyWorkspace;
+import com.frederikam.robotchess.mech.IWorkspace;
 import com.frederikam.robotchess.mech.MechanicalControl;
 import com.frederikam.robotchess.mech.Workspace;
 
@@ -12,8 +15,8 @@ import java.util.Optional;
 public class ChessControl {
 
     private final Chessboard chessboard;
-    private final Workspace workspace = new Workspace();
-    private final MechanicalControl mechanicalControl = new MechanicalControl(workspace);
+    private final IWorkspace IWorkspace = Launcher.gpio != null ? new Workspace() : new DummyWorkspace();
+    private final MechanicalControl mechanicalControl = new MechanicalControl(IWorkspace);
 
     public ChessControl(Chessboard chessboard) {
         this.chessboard = chessboard;
@@ -40,4 +43,7 @@ public class ChessControl {
         return true;
     }
 
+    public Chessboard getChessboard() {
+        return chessboard;
+    }
 }

@@ -15,7 +15,7 @@ import static com.frederikam.robotchess.Launcher.gpio;
 /**
  * High-level wrapper of steppers and the magnet
  */
-public class Workspace {
+public class Workspace implements IWorkspace {
 
     private static final Logger log = LoggerFactory.getLogger(Workspace.class);
 
@@ -30,11 +30,13 @@ public class Workspace {
         magnet = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08);
     }
 
+    @Override
     public StepPosition getPosition() {
         return new StepPosition(stepperX.getPosition(), stepperY.getPosition());
     }
 
     // Move synchronously with both steppers
+    @Override
     public void moveToSync(StepPosition position) {
         log.info("Moving to x: {}, y: {}", position.x, position.y);
         Future futureX = stepperExecutor.submit(() -> stepperX.stepTo(position.x));
@@ -48,6 +50,7 @@ public class Workspace {
         }
     }
 
+    @Override
     public void setMagnetEnabled(boolean enabled) {
         magnet.setState(enabled);
     }

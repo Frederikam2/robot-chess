@@ -11,11 +11,11 @@ public class MechanicalControl {
 
     private static final Logger log = LoggerFactory.getLogger(MechanicalControl.class);
 
-    private final Workspace workspace;
+    private final IWorkspace IWorkspace;
     private final ExecutorService executor;
 
-    public MechanicalControl(Workspace workspace) {
-        this.workspace = workspace;
+    public MechanicalControl(IWorkspace IWorkspace) {
+        this.IWorkspace = IWorkspace;
         executor = Executors.newSingleThreadExecutor(
                 r -> new Thread(r, "mechanical-control")
         );
@@ -33,50 +33,50 @@ public class MechanicalControl {
     }
 
     public void queueMove(StepPosition position) {
-        submit(() -> workspace.moveToSync(position));
+        submit(() -> IWorkspace.moveToSync(position));
     }
 
     public void queueDragAndDrop(StepPosition from, StepPosition to) {
         if (from.equals(to)) return;
 
         submit(() -> {
-            workspace.moveToSync(from);
-            workspace.setMagnetEnabled(true); // Start pulling
+            IWorkspace.moveToSync(from);
+            IWorkspace.setMagnetEnabled(true); // Start pulling
 
             // Decide which side is most efficient to move to
             StepPosition diff = to.minus(from);
             boolean moveXFirst = Math.abs(diff.x) < Math.abs(diff.y);  // Which axis diff is lesser?
             if (moveXFirst) {
                 double delta = diff.x > 0 ? Constants.HALF_TILE_WIDTH : -Constants.HALF_TILE_WIDTH;
-                workspace.moveToSync(workspace.getPosition().plus(delta, 0));
+                IWorkspace.moveToSync(IWorkspace.getPosition().plus(delta, 0));
             } else {
                 double delta = diff.y > 0 ? Constants.HALF_TILE_WIDTH : -Constants.HALF_TILE_WIDTH;
-                workspace.moveToSync(workspace.getPosition().plus(0, delta));
+                IWorkspace.moveToSync(IWorkspace.getPosition().plus(0, delta));
             }
 
             // Move on the other axis, now on the tile edges
             if (!moveXFirst) {
                 // Handle x
                 double delta = diff.x - Constants.HALF_TILE_WIDTH;
-                workspace.moveToSync(workspace.getPosition().plus(delta, 0));
+                IWorkspace.moveToSync(IWorkspace.getPosition().plus(delta, 0));
             } else {
                 // Handle y
                 double delta = diff.y - Constants.HALF_TILE_WIDTH;
-                workspace.moveToSync(workspace.getPosition().plus(0, delta));
+                IWorkspace.moveToSync(IWorkspace.getPosition().plus(0, delta));
             }
 
             // Move the remaining length on the first axis we moved
             if (moveXFirst) {
                 // Handle x
-                workspace.moveToSync(new StepPosition(to.x, workspace.getPosition().y));
+                IWorkspace.moveToSync(new StepPosition(to.x, IWorkspace.getPosition().y));
             } else {
                 // Handle y
-                workspace.moveToSync(new StepPosition(workspace.getPosition().x, to.y));
+                IWorkspace.moveToSync(new StepPosition(IWorkspace.getPosition().x, to.y));
             }
 
             // And then move the remainder
-            workspace.moveToSync(to);
-            workspace.setMagnetEnabled(false);
+            IWorkspace.moveToSync(to);
+            IWorkspace.setMagnetEnabled(false);
         });
     }
 }
