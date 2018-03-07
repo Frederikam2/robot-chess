@@ -12,7 +12,7 @@ public class King extends ChessPiece {
 
     @Override
     public boolean canMoveTo(TilePosition newPos) {
-        TilePosition diff = position.minus(newPos);
+        TilePosition diff = position.minus(newPos).abs();
 
         return diff.x <= 1 && diff.y <= 1 && super.canMoveTo(newPos);
     }

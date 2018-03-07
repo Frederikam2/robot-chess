@@ -27,7 +27,6 @@ public class Pawn extends ChessPiece {
                 // We can't move if a piece is in front of us
                 if (ChessUtil.getPiecesInRectangle(chessboard, position, newPos).size() != 1) return false;
 
-
                 if (forward == 2) {
                     // We must not have moved from the Pawn's home line
                     int home = alignment == Alignment.WHITE ? 1 : 6;

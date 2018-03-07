@@ -84,6 +84,13 @@ public class Chessboard {
         return b.toString();
     }
 
+    public void put(ChessPiece chessPiece) {
+        if(getPieceAt(chessPiece.getPosition()).isPresent())
+            throw new IllegalArgumentException("There is already a piece at this position");
+
+        pieces.add(chessPiece);
+    }
+
     public Alignment getPlayerOfTurn() {
         return playerOfTurn;
     }
