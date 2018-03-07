@@ -18,7 +18,7 @@ public class King extends ChessPiece {
     }
 
     @Override
-    public char signatureCharacter() {
-        return 'K';
+    public String signatureCharacter() {
+        return alignment == Alignment.WHITE ? "♔" : "♚";
     }
 }

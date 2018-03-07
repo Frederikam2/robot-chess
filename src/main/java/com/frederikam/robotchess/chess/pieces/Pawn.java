@@ -50,7 +50,7 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    public char signatureCharacter() {
-        return 'P';
+    public String signatureCharacter() {
+        return alignment == Alignment.WHITE ? "♙" : "♟";
     }
 }
