@@ -31,7 +31,7 @@ public class TilePosition {
             default: x = -1; break;
             //@formatter:on
         }
-        y = Integer.parseInt(tile.substring(1));
+        y = Integer.parseInt(tile.substring(1)) - 1;
         if (isOutOfBounds()) throw new RuntimeException("Invalid position: " + tile);
     }
 
@@ -41,6 +41,10 @@ public class TilePosition {
 
     public TilePosition minus(TilePosition other) {
         return new TilePosition(x - other.x, y - other.y);
+    }
+
+    public TilePosition plus(TilePosition other) {
+        return new TilePosition(x + other.x, y + other.y);
     }
 
     public TilePosition abs() {

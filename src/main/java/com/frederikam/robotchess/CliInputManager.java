@@ -40,6 +40,7 @@ public class CliInputManager extends Thread {
                         line.substring(0, 2),
                         line.substring(2, 4));
                 log.info("\n" + chessControl.getChessboard().getBoardStateString());
+                chessControl.getChessboard().onTurnEnd();
             } else {
                 log.info("Invalid move");
             }

@@ -1,10 +1,12 @@
 package com.frederikam.robotchess.chess;
 
 import com.frederikam.robotchess.chess.pieces.ChessPiece;
+import com.frederikam.robotchess.chess.pieces.Pawn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -19,9 +21,13 @@ public class Chessboard {
 
     public Chessboard() {
         pieces = new LinkedList<>();
+    }
 
-        // Todo: Instantiate chess pieces
-        log.info("Started game\n" + getBoardStateString());
+    public void populate() {
+        for (int i = 0; i <= 7; i++) {
+            pieces.add(new Pawn(this, Alignment.WHITE, new TilePosition(i, 1)));
+            pieces.add(new Pawn(this, Alignment.BLACK, new TilePosition(i, 6)));
+        }
     }
 
     public Optional<ChessPiece> getPieceAt(TilePosition tile) {
@@ -51,7 +57,7 @@ public class Chessboard {
         }
     }
 
-    void onTurnEnd() {
+    public void onTurnEnd() {
         playerOfTurn = playerOfTurn == Alignment.WHITE ? Alignment.BLACK : Alignment.WHITE;
     }
 
@@ -66,7 +72,7 @@ public class Chessboard {
             append.accept(getPieceAt(new TilePosition(-2, y)));
             append.accept(getPieceAt(new TilePosition(-1, y)));
             b.append("│");
-            for (int i = 1; i <= 8; i++) {
+            for (int i = 0; i <= 7; i++) {
                 append.accept(getPieceAt(new TilePosition(i, y)));
             }
             b.append("│");
@@ -80,5 +86,9 @@ public class Chessboard {
 
     public Alignment getPlayerOfTurn() {
         return playerOfTurn;
+    }
+
+    public List<ChessPiece> getPieces() {
+        return pieces;
     }
 }

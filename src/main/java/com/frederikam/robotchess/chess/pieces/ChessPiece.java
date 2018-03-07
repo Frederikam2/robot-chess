@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public abstract class ChessPiece {
 
-    private final Chessboard chessboard;
-    private final Alignment alignment;
+    final Chessboard chessboard;
+    final Alignment alignment;
     TilePosition position;
 
     ChessPiece(Chessboard chessboard, Alignment alignment, TilePosition position) {
