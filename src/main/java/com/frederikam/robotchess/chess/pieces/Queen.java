@@ -6,13 +6,21 @@ import com.frederikam.robotchess.chess.TilePosition;
 
 public class Queen extends ChessPiece {
 
+    private final Rook dummyRook;
+    private final Bishop dummyBishop;
+
     public Queen(Chessboard chessboard, Alignment alignment, TilePosition position) {
         super(chessboard, alignment, position);
+        dummyRook = new Rook(chessboard, alignment, position);
+        dummyBishop = new Bishop(chessboard, alignment, position);
     }
 
     @Override
     public boolean canMoveTo(TilePosition newPos) {
-        return super.canMoveTo(newPos);
+        dummyRook.setPosition(position);
+        dummyBishop.setPosition(position);
+
+        return dummyRook.canMoveTo(newPos) || dummyBishop.canMoveTo(newPos);
     }
 
     @Override
