@@ -4,10 +4,14 @@ import com.frederikam.robotchess.chess.Alignment;
 import com.frederikam.robotchess.chess.Chessboard;
 import com.frederikam.robotchess.chess.TilePosition;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 
 public class RookTest {
+
+    private static final Logger log = LoggerFactory.getLogger(RookTest.class);
 
     @Test
     public void canMoveTo() {
@@ -24,6 +28,18 @@ public class RookTest {
         assertEquals(false, rook.canMoveTo(2, 3));
         assertEquals(false, rook.canMoveTo(0, 4));
         assertEquals(false, rook.canMoveTo(6, 6));
+    }
+
+    @Test
+    public void canMoveToBlocked() {
+        Chessboard chessboard = new Chessboard();
+        Rook rook = new Rook(chessboard, Alignment.WHITE, new TilePosition(5, 5));
+        Rook rook2 = new Rook(chessboard, Alignment.BLACK, new TilePosition(5, 4));
+        chessboard.put(rook);
+        chessboard.put(rook2);
+        log.info("\n"+chessboard.getBoardStateString());
+        assertEquals(false, rook.canMoveTo(5, 3));
+        assertEquals(true, rook.canMoveTo(5, 4));
     }
 
 }
