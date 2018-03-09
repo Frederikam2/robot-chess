@@ -6,7 +6,7 @@ import com.frederikam.robotchess.chess.TilePosition;
 
 public class King extends ChessPiece {
 
-    King(Chessboard chessboard, Alignment alignment, TilePosition position) {
+    public King(Chessboard chessboard, Alignment alignment, TilePosition position) {
         super(chessboard, alignment, position);
     }
 

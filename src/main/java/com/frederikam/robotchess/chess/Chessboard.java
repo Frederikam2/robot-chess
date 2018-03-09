@@ -1,7 +1,6 @@
 package com.frederikam.robotchess.chess;
 
-import com.frederikam.robotchess.chess.pieces.ChessPiece;
-import com.frederikam.robotchess.chess.pieces.Pawn;
+import com.frederikam.robotchess.chess.pieces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +27,24 @@ public class Chessboard {
             pieces.add(new Pawn(this, Alignment.WHITE, new TilePosition(i, 1)));
             pieces.add(new Pawn(this, Alignment.BLACK, new TilePosition(i, 6)));
         }
+
+        pieces.add(new Rook(this, Alignment.WHITE, new TilePosition(0, 0)));
+        pieces.add(new Knight(this, Alignment.WHITE, new TilePosition(1, 0)));
+        pieces.add(new Bishop(this, Alignment.WHITE, new TilePosition(2, 0)));
+        pieces.add(new Queen(this, Alignment.WHITE, new TilePosition(3, 0)));
+        pieces.add(new King(this, Alignment.WHITE, new TilePosition(4, 0)));
+        pieces.add(new Bishop(this, Alignment.WHITE, new TilePosition(5, 0)));
+        pieces.add(new Knight(this, Alignment.WHITE, new TilePosition(6, 0)));
+        pieces.add(new Rook(this, Alignment.WHITE, new TilePosition(7, 0)));
+
+        pieces.add(new Rook(this, Alignment.BLACK, new TilePosition(0, 7)));
+        pieces.add(new Knight(this, Alignment.BLACK, new TilePosition(1, 7)));
+        pieces.add(new Bishop(this, Alignment.BLACK, new TilePosition(2, 7)));
+        pieces.add(new King(this, Alignment.BLACK, new TilePosition(4, 7)));
+        pieces.add(new Queen(this, Alignment.BLACK, new TilePosition(3, 7)));
+        pieces.add(new Bishop(this, Alignment.BLACK, new TilePosition(5, 7)));
+        pieces.add(new Knight(this, Alignment.BLACK, new TilePosition(6, 7)));
+        pieces.add(new Rook(this, Alignment.BLACK, new TilePosition(7, 7)));
     }
 
     public Optional<ChessPiece> getPieceAt(TilePosition tile) {

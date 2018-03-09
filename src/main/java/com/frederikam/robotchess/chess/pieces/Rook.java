@@ -6,7 +6,7 @@ import com.frederikam.robotchess.chess.TilePosition;
 
 public class Rook extends ChessPiece {
 
-    Rook(Chessboard chessboard, Alignment alignment, TilePosition position) {
+    public Rook(Chessboard chessboard, Alignment alignment, TilePosition position) {
         super(chessboard, alignment, position);
     }
 

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class Bishop extends ChessPiece {
 
-    Bishop(Chessboard chessboard, Alignment alignment, TilePosition position) {
+    public Bishop(Chessboard chessboard, Alignment alignment, TilePosition position) {
         super(chessboard, alignment, position);
     }
 
