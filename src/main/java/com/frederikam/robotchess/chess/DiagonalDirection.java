@@ -43,4 +43,12 @@ public enum DiagonalDirection {
         }
         return pieces;
     }
+
+    public static Optional<DiagonalDirection> getDirection(TilePosition from, TilePosition to) {
+        for (DiagonalDirection direction : values()) {
+            if(direction.getTilesInDirection(from).contains(to)) return Optional.of(direction);
+        }
+
+        return Optional.empty();
+    }
 }

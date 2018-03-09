@@ -18,6 +18,10 @@ public abstract class ChessPiece {
         this.position = position;
     }
 
+    public boolean canMoveTo(int x, int y) {
+        return canMoveTo(new TilePosition(x, y));
+    }
+
     public boolean canMoveTo(TilePosition newPos) {
         if(chessboard.getPlayerOfTurn() != alignment) return false; // The other player can't move this piece
 
