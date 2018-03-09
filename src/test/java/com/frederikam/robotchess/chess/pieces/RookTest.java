@@ -37,7 +37,6 @@ public class RookTest {
         Rook rook2 = new Rook(chessboard, Alignment.BLACK, new TilePosition(5, 4));
         chessboard.put(rook);
         chessboard.put(rook2);
-        log.info("\n"+chessboard.getBoardStateString());
         assertEquals(false, rook.canMoveTo(5, 3));
         assertEquals(true, rook.canMoveTo(5, 4));
     }

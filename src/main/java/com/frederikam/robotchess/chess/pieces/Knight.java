@@ -12,6 +12,10 @@ public class Knight extends ChessPiece {
 
     @Override
     public boolean canMoveTo(TilePosition newPos) {
+        TilePosition delta = position.minus(newPos).abs();
+
+        if (delta.x + delta.y != 3 || (delta.x == 0 || delta.y == 0)) return false;
+
         return super.canMoveTo(newPos);
     }
 
