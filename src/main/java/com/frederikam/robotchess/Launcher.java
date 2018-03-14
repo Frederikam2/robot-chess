@@ -1,5 +1,6 @@
 package com.frederikam.robotchess;
 
+import com.frederikam.robotchess.audio.AudioInputManager;
 import com.frederikam.robotchess.chess.ChessControl;
 import com.frederikam.robotchess.chess.Chessboard;
 import com.pi4j.io.gpio.GpioController;
@@ -29,6 +30,7 @@ public class Launcher {
                 SpeechService.streamingRecognizeFile("test.wav");
                 break;
         }*/
+        AudioInputManager.getInputLine();
     }
 
 }

@@ -57,8 +57,6 @@ public class ChessControl {
         // Check if we can move directly by moving a point along the vector,
         //  and seeing if we get too close to any nearby pieces
 
-        log.info("___");
-
         int checkCount = (int) Math.floor((from.toStepPosition().minus(to.toStepPosition())
                 .magnitude() / Constants.TILE_WIDTH) * 10);
 
@@ -72,7 +70,7 @@ public class ChessControl {
             if (nearestPiece.isPresent() && !nearestPiece.get().getPosition().equals(from)
                     && !nearestPiece.get().getPosition().equals(to)) {
                 double distance = testPoint.minus(testPoint.getNearestTile().toStepPosition()).magnitude();
-                log.info("Near {} with a distance of {} at pos {}", nearestPiece.get().getPosition(), distance, testPoint);
+                log.debug("Near {} with a distance of {} at pos {}", nearestPiece.get().getPosition(), distance, testPoint);
                 if (distance < Constants.PIECE_DIAMETER) return false; // Too close!
             }
         }
