@@ -4,7 +4,7 @@ public interface IWorkspace {
     StepPosition getPosition();
 
     // Move synchronously with both steppers
-    void moveToSync(StepPosition position, int time) throws InterruptedException;
+    void moveToSync(StepPosition position);
 
     void setMagnetEnabled(boolean enabled);
 }

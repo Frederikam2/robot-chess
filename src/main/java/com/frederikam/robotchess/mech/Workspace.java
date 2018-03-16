@@ -39,11 +39,15 @@ public class Workspace implements IWorkspace {
 
     // Move synchronously with both steppers
     @Override
-    public void moveToSync(StepPosition position, int time) throws InterruptedException {
-        log.info("Moving x: {}, y: {}, time: {}ms", position.x, position.y, time);
-
+    public void moveToSync(StepPosition position)  {
         double deltaX = position.x - stepperX.getPosition();
         double deltaY = position.y - stepperY.getPosition();
+
+        int time = (int) Math.max(
+                Math.abs(deltaX * MIN_STEP_INTERVAL),
+                Math.abs(deltaY * MIN_STEP_INTERVAL));
+
+        log.info("Moving to x: {}, y: {}, time: {}ms", position.x, position.y, time);
 
         Future futureX = stepperExecutor.submit(() -> runStepperX(deltaX, time));
         Future futureY = stepperExecutor.submit(() -> runStepperY(deltaY, time));
@@ -51,7 +55,7 @@ public class Workspace implements IWorkspace {
         try {
             futureX.get();
             futureY.get();
-        } catch (ExecutionException e) {
+        } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
