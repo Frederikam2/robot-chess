@@ -10,7 +10,10 @@ import org.slf4j.LoggerFactory;
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class SpeechService implements LineListener {
 
@@ -59,9 +62,6 @@ public class SpeechService implements LineListener {
             throw new RuntimeException(e);
         }
 
-        readerService = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "audio-reader-thread"));
-        readerService.scheduleAtFixedRate(this::sendAudio, 0, 4000, TimeUnit.MILLISECONDS);
-
         RecognitionConfig recConfig = RecognitionConfig.newBuilder()
                 .setEncoding(UPLOAD_FORMAT)
                 .setLanguageCode("en-US") // TODO
@@ -83,6 +83,10 @@ public class SpeechService implements LineListener {
         requestObserver.onNext(StreamingRecognizeRequest.newBuilder()
                 .setStreamingConfig(config)
                 .build());
+
+        // Begin actually sending
+        readerService = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "audio-reader-thread"));
+        readerService.scheduleAtFixedRate(this::sendAudio, 0, 4000, TimeUnit.MILLISECONDS);
     }
 
     private void onCompleted() {
