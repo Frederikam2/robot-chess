@@ -18,18 +18,12 @@ public class Launcher {
         gpio = SystemInfo.getOsArch().equals("amd64") ? null : GpioFactory.getInstance();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Chessboard chessboard = new Chessboard();
         chessboard.populate();
         log.info("Started game\n" + chessboard.getBoardStateString());
         ChessControl chessControl = new ChessControl(chessboard);
-        new CliInputManager(chessControl, System.in).start();
-
-        switch (args.length != 0 ? args[0] : "default") {
-            case "voice-test":
-                new SpeechService().setListening(true);
-                break;
-        }
+        new CliInputManager(chessControl, new SpeechService(), System.in).start();
     }
 
 }

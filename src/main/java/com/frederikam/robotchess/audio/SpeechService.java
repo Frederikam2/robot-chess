@@ -52,6 +52,10 @@ public class SpeechService implements LineListener {
         this.listening = listening;
     }
 
+    public boolean isListening() {
+        return listening;
+    }
+
     private void startListening() {
         // Open a line
         line = inputManager.getInputLine();
