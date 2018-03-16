@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class SpeechService implements LineListener {
 
     private static final Logger log = LoggerFactory.getLogger(SpeechService.class);
-    private static final int SAMPLE_RATE = 16000;
-    private final static AudioFormat CAPTURE_FORMAT = new AudioFormat(SAMPLE_RATE, 16, 2, true, false);
+        private static final int SAMPLE_RATE = 16000;
+    private final static AudioFormat CAPTURE_FORMAT = new AudioFormat(SAMPLE_RATE, 16, 1, true, false);
     private final static RecognitionConfig.AudioEncoding UPLOAD_FORMAT = RecognitionConfig.AudioEncoding.LINEAR16;
 
     private final AudioInputManager inputManager;
@@ -29,6 +29,7 @@ public class SpeechService implements LineListener {
     private SpeechClient speech;
     private volatile TargetDataLine line;
     private ScheduledExecutorService readerService;
+    private volatile AudioInputStream audioInputStream = null;
 
     public SpeechService() {
         this.inputManager = new AudioInputManager();
@@ -62,6 +63,8 @@ public class SpeechService implements LineListener {
 
         try {
             line.open(CAPTURE_FORMAT);
+            line.start();
+            audioInputStream = new AudioInputStream(line);
         } catch (LineUnavailableException e) {
             throw new RuntimeException(e);
         }
@@ -90,13 +93,20 @@ public class SpeechService implements LineListener {
 
         // Begin actually sending
         readerService = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "audio-reader-thread"));
-        readerService.scheduleAtFixedRate(this::sendAudio, 0, 4000, TimeUnit.MILLISECONDS);
+        readerService.scheduleAtFixedRate(this::sendAudio, 500, 500, TimeUnit.MILLISECONDS);
     }
 
     private void onCompleted() {
         log.info("Completed sending audio");
         readerService.shutdown();
         line.close();
+        line.stop();
+        try {
+            audioInputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        line = null;
 
         requestObserver.onCompleted();
         List<StreamingRecognizeResponse> responses;
@@ -116,10 +126,18 @@ public class SpeechService implements LineListener {
     private void sendAudio() {
         try {
 
-            int avail = line.available();
-            log.info("Sending {} bytes", avail);
-            byte[] data = new byte[avail];
-            line.read(data, 0, avail);
+
+            byte[] data;
+            try {
+                int avail = audioInputStream.available();
+                log.info("Sending {} bytes", avail);
+                data = new byte[avail];
+                //noinspection ResultOfMethodCallIgnored
+                audioInputStream.read(data, 0, avail);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
             requestObserver.onNext(StreamingRecognizeRequest.newBuilder()
                     .setAudioContent(ByteString.copyFrom(data))
                     .build());
