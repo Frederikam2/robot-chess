@@ -16,19 +16,17 @@ class ResponseApiStreamingObserver<T> implements ApiStreamObserver<T> {
 
     @Override
     public void onNext(T message) {
-        log.info("onNext {}", message);
         messages.add(message);
     }
 
     @Override
     public void onError(Throwable t) {
-        log.info("onError", t);
+        log.info("Speech API error", t);
         future.setException(t);
     }
 
     @Override
     public void onCompleted() {
-        log.info("onComplete");
         future.set(messages);
     }
 

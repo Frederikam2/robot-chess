@@ -125,23 +125,16 @@ public class SpeechService implements LineListener {
 
     private void sendAudio() {
         try {
-
-
-            byte[] data;
-            try {
-                int avail = audioInputStream.available();
-                log.info("Sending {} bytes", avail);
-                data = new byte[avail];
-                //noinspection ResultOfMethodCallIgnored
-                audioInputStream.read(data, 0, avail);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            int avail = audioInputStream.available();
+            log.info("Sending {} bytes", avail);
+            byte[] data = new byte[avail];
+            //noinspection ResultOfMethodCallIgnored
+            audioInputStream.read(data, 0, avail);
 
             requestObserver.onNext(StreamingRecognizeRequest.newBuilder()
                     .setAudioContent(ByteString.copyFrom(data))
                     .build());
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | IOException e) {
             log.error("Exception while sending audio", e);
         }
     }
