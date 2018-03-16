@@ -10,7 +10,7 @@ public class DummyWorkspace implements IWorkspace {
     }
 
     @Override
-    public void moveToSync(StepPosition position) {
+    public void moveToSync(StepPosition position, int time) {
         this.position = position;
 
     }

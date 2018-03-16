@@ -19,6 +19,8 @@ public class Workspace implements IWorkspace {
 
     private static final Logger log = LoggerFactory.getLogger(Workspace.class);
 
+    private static final double MIN_STEP_INTERVAL = 5;
+
     private final StepperMotor stepperX;
     private final StepperMotor stepperY;
     private final ExecutorService stepperExecutor = Executors.newFixedThreadPool(2);
@@ -37,16 +39,51 @@ public class Workspace implements IWorkspace {
 
     // Move synchronously with both steppers
     @Override
-    public void moveToSync(StepPosition position) {
-        log.info("Moving to x: {}, y: {}", position.x, position.y);
-        Future futureX = stepperExecutor.submit(() -> stepperX.stepTo(position.x));
-        Future futureY = stepperExecutor.submit(() -> stepperY.stepTo(position.y));
+    public void moveToSync(StepPosition position, int time) throws InterruptedException {
+        log.info("Moving x: {}, y: {}, time: {}ms", position.x, position.y, time);
+
+        double deltaX = position.x - stepperX.getPosition();
+        double deltaY = position.y - stepperY.getPosition();
+
+        Future futureX = stepperExecutor.submit(() -> runStepperX(deltaX, time));
+        Future futureY = stepperExecutor.submit(() -> runStepperY(deltaY, time));
 
         try {
             futureX.get();
             futureY.get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (ExecutionException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void runStepperX(double steps, int time) {
+        if (time == 0 || steps == 0) return;
+        // Ranging from 0 to 1
+        double speed = (MIN_STEP_INTERVAL * ((double) Math.abs(steps))) / ((double) time);
+        double interval = MIN_STEP_INTERVAL / speed;
+        // Stepper X supports variable speed, unlike stepper Y which behaves weird
+        stepperX.step(steps, (int) interval);
+    }
+
+    private void runStepperY(double steps, int time) {
+        if (time == 0 || steps == 0) return;
+
+        // Stepper Y steps at a constant interval of 4ms.
+        double interval = 4;
+        double targetCycleSteps = 25; // 1/16 revolution
+        double cycles = steps / targetCycleSteps;
+
+        // Adjust the number of cycles to a non-zero integer
+        cycles = Math.max(1, Math.round(cycles));
+        int stepsPerCycle = (int) (steps / cycles);
+        //noinspection CodeBlock2Expr
+        try {
+            new NanosecondExecutor(() -> {
+                stepperY.step(stepsPerCycle, (int) interval);
+            }, (int) cycles, (int) ((time / cycles) * 1000000))
+                    .run();
+        } catch (InterruptedException e) {
+            log.error("Interrupted while running stepper", e);
         }
     }
 

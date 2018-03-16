@@ -44,24 +44,24 @@ public class StepperMotor {
 
         motor.setStepsPerRevolution(stepsPerRevolution);
         motor.setStepSequence(singleStepForwardSeq);
-        motor.setStepInterval(2); // Full speed for these particular steppers
     }
 
     StepperMotor(Pin pin1, Pin pin2, Pin pin3, Pin pin4) {
         this(pin1, pin2, pin3, pin4, 400);
     }
 
-    public void step(double steps) {
+    public void step(double steps, int interval) {
         double startPos = position.get();
         position.addAndGet(steps);
+        motor.setStepInterval(interval);
 
         // Calculate the steps that we need, with respect to mitigating rounding errors
         int roundedSteps = (int) (Math.floor(steps) - Math.floor(startPos));
         motor.step(roundedSteps);
     }
 
-    public void stepTo(double newPosition) {
-        step(newPosition - position.get());
+    public void stepTo(double newPosition, int interval) {
+        step(newPosition - position.get(), interval);
     }
 
     public double getPosition() {
