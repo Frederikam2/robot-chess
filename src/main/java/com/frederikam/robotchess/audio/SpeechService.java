@@ -27,8 +27,8 @@ public class SpeechService implements LineListener {
     private volatile TargetDataLine line;
     private ScheduledExecutorService readerService;
 
-    public SpeechService(AudioInputManager inputManager) {
-        this.inputManager = inputManager;
+    public SpeechService() {
+        this.inputManager = new AudioInputManager();
 
         // Instantiates a client with GOOGLE_APPLICATION_CREDENTIALS
         try {
@@ -86,6 +86,7 @@ public class SpeechService implements LineListener {
     }
 
     private void onCompleted() {
+        log.info("Completed sending audio");
         readerService.shutdown();
         line.close();
 
@@ -105,16 +106,24 @@ public class SpeechService implements LineListener {
     }
 
     private void sendAudio() {
-        int avail = line.available();
-        byte[] data = new byte[avail];
-        line.read(data, 0, avail);
-        requestObserver.onNext(StreamingRecognizeRequest.newBuilder()
-                .setAudioContent(ByteString.copyFrom(data))
-                .build());
+        try {
+
+            int avail = line.available();
+            log.info("Sending {} bytes", avail);
+            byte[] data = new byte[avail];
+            line.read(data, 0, avail);
+            requestObserver.onNext(StreamingRecognizeRequest.newBuilder()
+                    .setAudioContent(ByteString.copyFrom(data))
+                    .build());
+        } catch (RuntimeException e) {
+            log.error("Exception while sending audio", e);
+        }
     }
 
     @Override
     public void update(LineEvent event) {
+        log.info("Line status " + event);
+
         switch (event.getType().toString()) {
             case "Close":
                 setListening(false);
