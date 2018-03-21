@@ -4,6 +4,7 @@ import com.frederikam.robotchess.audio.ChessLocale;
 import com.frederikam.robotchess.audio.SpeechService;
 import com.frederikam.robotchess.chess.ChessControl;
 import com.frederikam.robotchess.chess.Chessboard;
+import com.frederikam.robotchess.chess.TilePosition;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.system.SystemInfo;
@@ -27,6 +28,15 @@ public class Launcher {
         ChessControl chessControl = new ChessControl(chessboard);
         SpeechService speechService = new SpeechService(chessControl, new ChessLocale.Danish());
         new CliInputManager(chessControl, speechService, System.in).start();
+
+        //noinspection ConstantConditions
+        if (true) {
+            // Run motor test
+            chessControl.move(new TilePosition("A1"), new TilePosition("A3"));
+            chessControl.move(new TilePosition("B8"), new TilePosition("A1"));
+            chessControl.move(new TilePosition("A3"), new TilePosition("B8"));
+            chessControl.resetBoard();
+        }
     }
 
 }
