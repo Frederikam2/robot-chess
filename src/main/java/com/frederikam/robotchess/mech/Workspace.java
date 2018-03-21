@@ -62,17 +62,8 @@ public class Workspace implements IWorkspace {
 
     private void runStepperX(double steps, int time) {
         if (time == 0 || steps == 0) return;
-        // Ranging from 0 to 1
-        double speed = (MIN_STEP_INTERVAL * ((double) Math.abs(steps))) / ((double) time);
-        double interval = MIN_STEP_INTERVAL / speed;
-        // Stepper X supports variable speed, unlike stepper Y which behaves weird
-        stepperX.step(steps, (int) interval);
-    }
 
-    private void runStepperY(double steps, int time) {
-        if (time == 0 || steps == 0) return;
-
-        // Stepper Y steps at a constant interval of 4ms.
+        // Stepper X steps at a constant interval of 4ms.
         double interval = 4;
         double targetCycleSteps = 25; // 1/16 revolution
         double cycles = steps / targetCycleSteps;
@@ -83,12 +74,21 @@ public class Workspace implements IWorkspace {
         //noinspection CodeBlock2Expr
         try {
             new NanosecondExecutor(() -> {
-                stepperY.step(stepsPerCycle, (int) interval);
+                stepperX.step(stepsPerCycle, (int) interval);
             }, (int) cycles, (int) ((time / cycles) * 1000000))
                     .run();
         } catch (InterruptedException e) {
             log.error("Interrupted while running stepper", e);
         }
+    }
+
+    private void runStepperY(double steps, int time) {
+        if (time == 0 || steps == 0) return;
+        // Ranging from 0 to 1
+        double speed = (MIN_STEP_INTERVAL * Math.abs(steps)) / ((double) time);
+        double interval = MIN_STEP_INTERVAL / speed;
+        // Stepper Y supports variable speed, unlike stepper X which behaves weird instead
+        stepperX.step(steps, (int) interval);
     }
 
     @Override
