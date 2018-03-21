@@ -10,11 +10,13 @@ public abstract class ChessPiece {
 
     final Chessboard chessboard;
     final Alignment alignment;
+    private final TilePosition startPosition;
     TilePosition position;
 
     ChessPiece(Chessboard chessboard, Alignment alignment, TilePosition position) {
         this.chessboard = chessboard;
         this.alignment = alignment;
+        this.startPosition = position;
         this.position = position;
     }
 
@@ -50,5 +52,9 @@ public abstract class ChessPiece {
 
     public Alignment getAlignment() {
         return alignment;
+    }
+
+    public TilePosition getStartPosition() {
+        return startPosition;
     }
 }

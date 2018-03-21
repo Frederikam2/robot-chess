@@ -78,8 +78,8 @@ public class ChessControl {
         return true;
     }
 
-    public boolean processCommand(String command) {
-        if (command.length() != 4) return false;
+    public void processCommand(String command) {
+        if (command.length() != 4) return;
 
         TilePosition from;
         TilePosition to;
@@ -87,7 +87,7 @@ public class ChessControl {
             from = new TilePosition(command.substring(0, 2));
             to = new TilePosition(command.substring(2, 4));
         } catch (IllegalArgumentException e) {
-            return false;
+            return;
         }
         Optional<ChessPiece> piece = getChessboard().getPieceAt(from);
 
@@ -103,8 +103,10 @@ public class ChessControl {
         } else {
             log.info("Invalid move");
         }
+    }
 
-        return valid;
+    public void resetBoard() {
+        chessboard.getPieces().forEach((p) -> move(p.getPosition(), p.getStartPosition()));
     }
 
     public Chessboard getChessboard() {
