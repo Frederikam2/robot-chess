@@ -87,7 +87,7 @@ public class SpeechService implements LineListener {
             throw new RuntimeException(e);
         }
 
-        responseObserver = new TranscriptRecipient<>(chessControl);
+        responseObserver = new TranscriptRecipient<>(chessControl, locale);
 
         BidiStreamingCallable<StreamingRecognizeRequest,StreamingRecognizeResponse> callable =
                 speech.streamingRecognizeCallable();

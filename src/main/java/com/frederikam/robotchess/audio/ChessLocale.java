@@ -4,6 +4,7 @@ import com.frederikam.robotchess.chess.pieces.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings("SpellCheckingInspection")
 public abstract class ChessLocale {
@@ -12,32 +13,32 @@ public abstract class ChessLocale {
 
     abstract List<String> getKeywords();
 
-    static Class<? extends ChessPiece> interpretChessPiece(String s) {
+    static Optional<Class<? extends ChessPiece>> interpretChessPiece(String s) {
         switch (s) {
             case "pawn":
             case "bonde":
-                return Pawn.class;
+                return Optional.of(Pawn.class);
             case "rook":
             case "tower":
             case "tårn":
-                return Rook.class;
+                return Optional.of(Rook.class);
             case "bishop":
             case "biskop":
-                return Bishop.class;
+                return Optional.of(Bishop.class);
             case "springer":
             case "knight":
             case "horse":
             case "ridder":
             case "hest":
-                return Knight.class;
+                return Optional.of(Knight.class);
             case "king":
             case "konge":
-                return King.class;
+                return Optional.of(King.class);
             case "queen":
             case "dronning":
-                return Queen.class;
+                return Optional.of(Queen.class);
             default:
-                return null;
+                return Optional.empty();
         }
     }
 

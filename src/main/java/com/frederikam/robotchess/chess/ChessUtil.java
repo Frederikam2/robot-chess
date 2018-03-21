@@ -4,6 +4,8 @@ import com.frederikam.robotchess.chess.pieces.ChessPiece;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ChessUtil {
 
@@ -26,6 +28,33 @@ public class ChessUtil {
         }
 
         return list;
+    }
+
+    // Eg "pawn to A4"
+    public static List<ChessPiece> getPiecesOfTypeWhichCanMoveTo(Chessboard chessboard,
+                                                                 Class<? extends ChessPiece> type,
+                                                                 TilePosition to) {
+        return chessboard.getPieces()
+                .stream()
+                .filter(type::isInstance)
+                .filter((p) -> p.canMoveTo(to))
+                .collect(Collectors.toList());
+    }
+
+    // Eg "A1 to rook"
+    public static List<ChessPiece> getTargetsOfTypeWhichWeCanMoveTo(Chessboard chessboard,
+                                                               Class<? extends ChessPiece> type,
+                                                               TilePosition from) {
+        Optional<ChessPiece> pieceAt = chessboard.getPieceAt(from);
+
+        if (!pieceAt.isPresent()) return new LinkedList<>();
+        ChessPiece fromPiece = pieceAt.get();
+
+        return chessboard.getPieces()
+                .stream()
+                .filter(type::isInstance)
+                .filter((p) -> fromPiece.canMoveTo(p.getPosition()))
+                .collect(Collectors.toList());
     }
 
 }

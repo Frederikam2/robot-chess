@@ -4,9 +4,11 @@ import com.frederikam.robotchess.Constants;
 import com.frederikam.robotchess.mech.StepPosition;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class TilePosition {
 
+    private static Pattern PATTERN = Pattern.compile("^[A-H][1-8]$");
     public final int x;
     public final int y;
 
@@ -89,5 +91,9 @@ public class TilePosition {
     @Override
     public String toString() {
         return "[" + x + "," + y + "]";
+    }
+
+    public static boolean isValidTile(String s) {
+        return PATTERN.matcher(s).matches();
     }
 }
