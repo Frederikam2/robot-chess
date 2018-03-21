@@ -78,6 +78,29 @@ public class ChessControl {
         return true;
     }
 
+    public boolean processCommand(String command) {
+        if (command.length() != 4) return false;
+
+        TilePosition from = new TilePosition(command.substring(0, 2));
+        TilePosition to   = new TilePosition(command.substring(2, 4));
+        Optional<ChessPiece> piece = getChessboard().getPieceAt(from);
+
+        boolean valid = move(from, to);
+        if (valid) {
+            //noinspection ConstantConditions
+            log.info("Moved {} from {} to {}",
+                    piece.get().getClass().getSimpleName(),
+                    command.substring(0, 2),
+                    command.substring(2, 4));
+            log.info("\n" + getChessboard().getBoardStateString());
+            getChessboard().onTurnEnd();
+        } else {
+            log.info("Invalid move");
+        }
+
+        return valid;
+    }
+
     public Chessboard getChessboard() {
         return chessboard;
     }

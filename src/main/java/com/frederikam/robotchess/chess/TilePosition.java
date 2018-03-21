@@ -67,6 +67,20 @@ public class TilePosition {
         );
     }
 
+    public String toTileNotation() {
+        switch (x) {
+            case 0: return "A" + y;
+            case 1: return "B" + y;
+            case 2: return "C" + y;
+            case 3: return "D" + y;
+            case 4: return "E" + y;
+            case 5: return "F" + y;
+            case 6: return "G" + y;
+            case 7: return "H" + y;
+            default: throw new RuntimeException("Invalid tile position: " + this);
+        }
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(x, y);

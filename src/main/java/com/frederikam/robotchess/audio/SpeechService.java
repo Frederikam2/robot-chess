@@ -1,5 +1,7 @@
 package com.frederikam.robotchess.audio;
 
+import com.frederikam.robotchess.chess.ChessControl;
+import com.frederikam.robotchess.chess.TilePosition;
 import com.google.api.gax.rpc.ApiStreamObserver;
 import com.google.api.gax.rpc.BidiStreamingCallable;
 import com.google.cloud.speech.v1.*;
@@ -23,15 +25,20 @@ public class SpeechService implements LineListener {
     private final static RecognitionConfig.AudioEncoding UPLOAD_FORMAT = RecognitionConfig.AudioEncoding.LINEAR16;
 
     private final AudioInputManager inputManager;
-    private volatile ResponseApiStreamingObserver<StreamingRecognizeResponse> responseObserver;
+    private volatile TranscriptRecipient<StreamingRecognizeResponse> responseObserver;
     private volatile ApiStreamObserver<StreamingRecognizeRequest> requestObserver;
     private volatile boolean listening = false;
     private SpeechClient speech;
     private volatile TargetDataLine line;
     private ScheduledExecutorService readerService;
     private volatile AudioInputStream audioInputStream = null;
+    private final ChessControl chessControl;
+    private final StreamingRecognitionConfig streamingConfig;
+    private final ChessLocale locale;
 
-    public SpeechService() {
+    public SpeechService(ChessControl chessControl, ChessLocale locale) {
+        this.chessControl = chessControl;
+        this.locale = locale;
         this.inputManager = new AudioInputManager();
 
         // Instantiates a client with GOOGLE_APPLICATION_CREDENTIALS
@@ -40,6 +47,17 @@ public class SpeechService implements LineListener {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        RecognitionConfig recConfig = RecognitionConfig.newBuilder()
+                .setEncoding(UPLOAD_FORMAT)
+                .setLanguageCode(locale.voiceLocale())
+                .setSampleRateHertz(SAMPLE_RATE)
+                .setSpeechContexts(0, getSpeechContext())
+                .build();
+        streamingConfig = StreamingRecognitionConfig.newBuilder()
+                .setConfig(recConfig)
+                .setInterimResults(true)
+                .build();
     }
 
     public void setListening(boolean listening) {
@@ -69,17 +87,7 @@ public class SpeechService implements LineListener {
             throw new RuntimeException(e);
         }
 
-        RecognitionConfig recConfig = RecognitionConfig.newBuilder()
-                .setEncoding(UPLOAD_FORMAT)
-                .setLanguageCode("en-US") // TODO
-                .setSampleRateHertz(SAMPLE_RATE)
-                .build();
-        StreamingRecognitionConfig config = StreamingRecognitionConfig.newBuilder()
-                .setConfig(recConfig)
-                .setInterimResults(true)
-                .build();
-
-        responseObserver = new ResponseApiStreamingObserver<>();
+        responseObserver = new TranscriptRecipient<>(chessControl);
 
         BidiStreamingCallable<StreamingRecognizeRequest,StreamingRecognizeResponse> callable =
                 speech.streamingRecognizeCallable();
@@ -88,7 +96,7 @@ public class SpeechService implements LineListener {
 
         // The first request must **only** contain the audio configuration:
         requestObserver.onNext(StreamingRecognizeRequest.newBuilder()
-                .setStreamingConfig(config)
+                .setStreamingConfig(streamingConfig)
                 .build());
 
         // Begin actually sending
@@ -126,7 +134,6 @@ public class SpeechService implements LineListener {
     private void sendAudio() {
         try {
             int avail = audioInputStream.available();
-            log.info("Sending {} bytes", avail);
             byte[] data = new byte[avail];
             //noinspection ResultOfMethodCallIgnored
             audioInputStream.read(data, 0, avail);
@@ -149,5 +156,19 @@ public class SpeechService implements LineListener {
                 log.info("Audio line closed");
                 break;
         }
+    }
+
+    private SpeechContext getSpeechContext() {
+        SpeechContext.Builder builder = SpeechContext.newBuilder();
+
+        for (int x = 0; x <= 8; x++) {
+            for (int y = 0; y <= 8; y++) {
+                builder.addPhrases(new TilePosition(x, y).toTileNotation());
+            }
+        }
+
+        builder.addAllPhrases(locale.getKeywords());
+
+        return builder.build();
     }
 }
