@@ -81,8 +81,14 @@ public class ChessControl {
     public boolean processCommand(String command) {
         if (command.length() != 4) return false;
 
-        TilePosition from = new TilePosition(command.substring(0, 2));
-        TilePosition to   = new TilePosition(command.substring(2, 4));
+        TilePosition from;
+        TilePosition to;
+        try {
+            from = new TilePosition(command.substring(0, 2));
+            to = new TilePosition(command.substring(2, 4));
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
         Optional<ChessPiece> piece = getChessboard().getPieceAt(from);
 
         boolean valid = move(from, to);

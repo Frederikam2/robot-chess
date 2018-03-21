@@ -25,7 +25,7 @@ public class Launcher {
         log.info("Started game\n" + chessboard.getBoardStateString());
 
         ChessControl chessControl = new ChessControl(chessboard);
-        SpeechService speechService = new SpeechService(chessControl, new ChessLocale.English());
+        SpeechService speechService = new SpeechService(chessControl, new ChessLocale.Danish());
         new CliInputManager(chessControl, speechService, System.in).start();
     }
 

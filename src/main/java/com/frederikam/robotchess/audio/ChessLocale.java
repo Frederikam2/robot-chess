@@ -2,6 +2,7 @@ package com.frederikam.robotchess.audio;
 
 import com.frederikam.robotchess.chess.pieces.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -49,15 +50,16 @@ public abstract class ChessLocale {
 
         @Override
         public List<String> getKeywords() {
-            return List.of(
-                    "pawn",
-                    "rook",
-                    "bishop",
-                    "springer",
-                    "knight",
-                    "king",
-                    "queen"
-            );
+            LinkedList<String> list = new LinkedList<>();
+            list.add("pawn");
+            list.add("rook");
+            list.add("bishop");
+            list.add("springer");
+            list.add("knight");
+            list.add("king");
+            list.add("queen");
+
+            return list;
         }
     }
 
@@ -70,15 +72,17 @@ public abstract class ChessLocale {
 
         @Override
         public List<String> getKeywords() {
-            return List.of(
-                    "bonde",
-                    "tårn",
-                    "biskop",
-                    "ridder",
-                    "hest",
-                    "konge",
-                    "dronning"
-            );
+            LinkedList<String> list = new LinkedList<>();
+
+            list.add("bonde");
+            list.add("tårn");
+            list.add("biskop");
+            list.add("ridder");
+            list.add("hest");
+            list.add("konge");
+            list.add("dronning");
+
+            return list;
         }
     }
 

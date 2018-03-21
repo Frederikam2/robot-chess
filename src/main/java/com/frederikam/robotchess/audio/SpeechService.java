@@ -52,7 +52,7 @@ public class SpeechService implements LineListener {
                 .setEncoding(UPLOAD_FORMAT)
                 .setLanguageCode(locale.voiceLocale())
                 .setSampleRateHertz(SAMPLE_RATE)
-                .setSpeechContexts(0, getSpeechContext())
+                .addSpeechContexts(getSpeechContext())
                 .build();
         streamingConfig = StreamingRecognitionConfig.newBuilder()
                 .setConfig(recConfig)
@@ -161,8 +161,8 @@ public class SpeechService implements LineListener {
     private SpeechContext getSpeechContext() {
         SpeechContext.Builder builder = SpeechContext.newBuilder();
 
-        for (int x = 0; x <= 8; x++) {
-            for (int y = 0; y <= 8; y++) {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
                 builder.addPhrases(new TilePosition(x, y).toTileNotation());
             }
         }
