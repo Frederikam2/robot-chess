@@ -84,4 +84,9 @@ public class MechanicalControl {
         // And then move the remainder
         workspace.moveToSync(to);
     }
+
+    public void reset() {
+        // We will automatically stop any motor that triggers one of the microswitches
+        submit(() -> workspace.moveToSync(new StepPosition(-50000, -50000)));
+    }
 }

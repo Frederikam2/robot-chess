@@ -27,8 +27,8 @@ public class Workspace implements IWorkspace {
     private final GpioPinDigitalOutput magnet;
 
     public Workspace() {
-        stepperX = new StepperMotor(RaspiPin.GPIO_00, RaspiPin.GPIO_01, RaspiPin.GPIO_02, RaspiPin.GPIO_03);
-        stepperY = new StepperMotor(RaspiPin.GPIO_04, RaspiPin.GPIO_05, RaspiPin.GPIO_06, RaspiPin.GPIO_07);
+        stepperX = new StepperMotor(RaspiPin.GPIO_00, RaspiPin.GPIO_01, RaspiPin.GPIO_02, RaspiPin.GPIO_03, RaspiPin.GPIO_09);
+        stepperY = new StepperMotor(RaspiPin.GPIO_04, RaspiPin.GPIO_05, RaspiPin.GPIO_06, RaspiPin.GPIO_07, RaspiPin.GPIO_10);
         magnet = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08);
     }
 

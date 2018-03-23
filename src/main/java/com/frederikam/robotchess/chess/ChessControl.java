@@ -109,6 +109,10 @@ public class ChessControl {
         chessboard.getPieces().forEach((p) -> move(p.getPosition(), p.getStartPosition()));
     }
 
+    public MechanicalControl getMechanicalControl() {
+        return mechanicalControl;
+    }
+
     public Chessboard getChessboard() {
         return chessboard;
     }

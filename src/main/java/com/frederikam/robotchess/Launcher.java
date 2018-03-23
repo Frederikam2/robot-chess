@@ -32,10 +32,12 @@ public class Launcher {
         //noinspection ConstantConditions
         if (true) {
             // Run motor test
+            chessControl.getMechanicalControl().reset();
             chessControl.move(new TilePosition("A1"), new TilePosition("A3"));
             chessControl.move(new TilePosition("B8"), new TilePosition("A1"));
             chessControl.move(new TilePosition("A3"), new TilePosition("B8"));
             chessControl.resetBoard();
+            chessControl.getMechanicalControl().reset();
         }
     }
 
