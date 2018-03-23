@@ -44,7 +44,7 @@ class TranscriptRecipient<T> implements ApiStreamObserver<T> {
                 log.info("Voice: " + transcript);
                 transcripts.add(transcript);
                 try {
-                    chessControl.processCommand(transcript);
+                    parsePhrase(transcript);
                 } catch (RuntimeException e) {
                     log.error("Error processing command", e);
                 }
@@ -53,7 +53,10 @@ class TranscriptRecipient<T> implements ApiStreamObserver<T> {
     }
 
     private void parsePhrase(String s) {
-        // TODO: Check for special words like "reset"
+        if(ChessLocale.phraseContainsResetCommand(s)) {
+            chessControl.resetBoard();
+            return;
+        }
 
         String[] words = s.split(" ");
         LinkedList<Object> targets = new LinkedList<>();

@@ -42,6 +42,11 @@ public abstract class ChessLocale {
         }
     }
 
+    static boolean phraseContainsResetCommand(String phrase) {
+        return phrase.contains("reset")
+                || phrase.contains("nulstil");
+    }
+
     public static class English extends ChessLocale {
 
         @Override
@@ -59,6 +64,7 @@ public abstract class ChessLocale {
             list.add("knight");
             list.add("king");
             list.add("queen");
+            list.add("reset");
 
             return list;
         }
@@ -82,6 +88,7 @@ public abstract class ChessLocale {
             list.add("hest");
             list.add("konge");
             list.add("dronning");
+            list.add("nulstil");
 
             return list;
         }

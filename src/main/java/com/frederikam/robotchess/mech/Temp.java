@@ -13,13 +13,10 @@ public class Temp {
         StepperMotor stepperY = new StepperMotor(RaspiPin.GPIO_04, RaspiPin.GPIO_05, RaspiPin.GPIO_06, RaspiPin.GPIO_07, RaspiPin.GPIO_10);
 
         boolean b = false;
-        long time = System.currentTimeMillis();
         while (true) {
             b = !b;
             log.info(stepperX.getPosition() + "");
             stepperX.step(b ? 400 : -400, 2);
-            log.info("Difference: {}", System.currentTimeMillis() - time);
-            time = System.currentTimeMillis();
         }
 
         /*ExecutorService exec = Executors.newFixedThreadPool(2);
