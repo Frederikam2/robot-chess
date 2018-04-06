@@ -4,6 +4,7 @@ import com.frederikam.robotchess.Constants;
 import com.frederikam.robotchess.Launcher;
 import com.frederikam.robotchess.chess.pieces.ChessPiece;
 import com.frederikam.robotchess.mech.*;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +17,8 @@ public class ChessControl {
 
     private static final Logger log = LoggerFactory.getLogger(ChessControl.class);
     private final Chessboard chessboard;
-    private final IWorkspace IWorkspace = Launcher.gpio != null ? new Workspace() : new DummyWorkspace();
-    private final MechanicalControl mechanicalControl = new MechanicalControl(IWorkspace);
+    private final IWorkspace workspace = Launcher.gpio != null ? new Workspace() : new DummyWorkspace();
+    private final MechanicalControl mechanicalControl = new MechanicalControl(workspace);
 
     public ChessControl(Chessboard chessboard) {
         this.chessboard = chessboard;
@@ -78,7 +79,23 @@ public class ChessControl {
         return true;
     }
 
+    // From stdin
     public void processCommand(String command) {
+        if (command.equals("reset")) {
+            mechanicalControl.reset();
+            return;
+        } else if (command.startsWith("force")) {
+            String[] split = command.split(" ");
+            Pair<StepperMotor, StepperMotor> motors = ((Workspace) workspace).getMotors();
+            motors.getKey()  .stepTo(Double.parseDouble(split[1]), 2);
+            motors.getValue().stepTo(Double.parseDouble(split[2]), 2);
+        } else if (command.startsWith("goto")) {
+            String[] split = command.split(" ");
+            Pair<StepperMotor, StepperMotor> motors = ((Workspace) workspace).getMotors();
+            motors.getKey()  .stepTo(new TilePosition(split[2]).toStepPosition().x, 2);
+            motors.getValue().stepTo(new TilePosition(split[2]).toStepPosition().y, 2);
+        }
+
         if (command.length() != 4) return;
 
         TilePosition from;
