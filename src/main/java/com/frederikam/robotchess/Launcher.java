@@ -35,9 +35,15 @@ public class Launcher {
 
         chessControl.getMechanicalControl().reset();
 
+
         /*
+        chessControl.processCommand("force 400 400");
+        chessControl.processCommand("force 400 800");
+        chessControl.processCommand("force 800 800");
+        chessControl.processCommand("force 100 100");*/
+
         //noinspection ConstantConditions
-        if (true) {
+        /*if (true) {
             // Run motor test
             chessControl.getMechanicalControl().reset();
             chessControl.move(new TilePosition("A1"), new TilePosition("A3"));

@@ -5,6 +5,7 @@ public class NanosecondExecutor {
     private final Runnable runnable;
     private final int times;
     private final long interval; // Nanos
+    private boolean stopped = false;
 
     public NanosecondExecutor(Runnable runnable, int times, long interval) {
         this.runnable = runnable;
@@ -12,11 +13,16 @@ public class NanosecondExecutor {
         this.interval = interval;
     }
 
+    public void stop() {
+        stopped = true;
+    }
+
     public void run() throws InterruptedException {
         long startTime = System.nanoTime();
 
         for (int i = 0; i < times; i++) {
             runnable.run();
+            if (stopped) return;
             long sleepEndTime = startTime + interval * i;
             long diff = sleepEndTime - System.nanoTime();
             if (diff < 0) continue;

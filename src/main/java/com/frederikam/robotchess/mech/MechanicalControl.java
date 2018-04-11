@@ -89,6 +89,6 @@ public class MechanicalControl {
     public void reset() {
         // We will automatically stop any motor that triggers one of the microswitches
         log.info("Queued reset");
-        submit(() -> workspace.moveToSync(new StepPosition(10000, 10000)));
+        submit(() -> workspace.moveToSync(new StepPosition(-10000, -10000)));
     }
 }

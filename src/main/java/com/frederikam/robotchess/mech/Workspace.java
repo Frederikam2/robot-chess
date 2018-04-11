@@ -20,7 +20,7 @@ public class Workspace implements IWorkspace {
 
     private static final Logger log = LoggerFactory.getLogger(Workspace.class);
 
-    private static final double MIN_STEP_INTERVAL = 5;
+    private static final double MIN_STEP_INTERVAL = 2;
 
     private final StepperMotor stepperX;
     private final StepperMotor stepperY;
@@ -72,10 +72,15 @@ public class Workspace implements IWorkspace {
         int stepsPerCycle = (int) (steps / cycles);
         //noinspection CodeBlock2Expr
         try {
-            new NanosecondExecutor(() -> {
+            NanosecondExecutor[] executor = new NanosecondExecutor[1];
+            executor[0] = new NanosecondExecutor(() -> {
                 stepper.step(stepsPerCycle);
-            }, (int) cycles, (int) ((time / cycles) * 1000000))
-                    .run();
+
+                if (stepper.getPosition() == 0 && steps < 0)
+                    executor[0].stop();
+            }, (int) cycles, (int) ((time / cycles) * 1000000));
+
+            executor[0].run();
         } catch (InterruptedException e) {
             log.error("Interrupted while running stepper", e);
         }

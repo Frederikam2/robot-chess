@@ -82,6 +82,7 @@ public class ChessControl {
     // From stdin
     public void processCommand(String command) {
         if (command.equals("reset")) {
+            log.info("resetting");
             mechanicalControl.reset();
             return;
         } else if (command.startsWith("force")) {
