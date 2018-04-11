@@ -1,7 +1,6 @@
 package com.frederikam.robotchess.mech;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import com.pi4j.component.motor.MotorState;
 import com.pi4j.component.motor.impl.GpioStepperMotorComponent;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -30,6 +29,7 @@ public class StepperMotor {
             }
     );
     private final GpioPinDigitalInput swtch;
+    private volatile boolean goingForward = false;
 
     StepperMotor(Pin pin1, Pin pin2,
                          Pin pin3, Pin pin4,
@@ -66,19 +66,27 @@ public class StepperMotor {
         motor.setStepSequence(singleStepForwardSeq);
     }
 
-    public void step(double steps, int interval) {
-        double startPos = position.get(); // 400
-        double newPos = position.addAndGet(steps); // 0
-        motor.setStepInterval(interval);
+    public void step(double steps) {
+        double startPos = position.get();
+        double newPos = position.addAndGet(steps);
+        motor.setStepInterval(2);
 
         // Calculate the steps that we need, with respect to mitigating rounding errors
         int roundedSteps = (int) (Math.floor(newPos) - Math.floor(startPos));
         log.info("Rounded {}", roundedSteps);
-        motor.step(roundedSteps);
+
+        if (steps > 0 && swtch.isHigh()) {
+            log.warn("Ignored movement because we are already at 0!");
+            position.set(0);
+        } else {
+            goingForward = steps > 0;
+            motor.step(roundedSteps);
+            goingForward = false;
+        }
     }
 
-    public void stepTo(double newPosition, int interval) {
-        step(newPosition - position.get(), interval);
+    public void stepTo(double newPosition) {
+        step(newPosition - position.get());
     }
 
     public double getPosition() {
@@ -86,8 +94,7 @@ public class StepperMotor {
     }
 
     private void recurringTask() {
-        if(motor.getState() == MotorState.REVERSE
-                && swtch.isHigh()) {
+        if(goingForward && swtch.isHigh()) {
             log.info("Motor triggered microswitch");
 
             motor.stop();

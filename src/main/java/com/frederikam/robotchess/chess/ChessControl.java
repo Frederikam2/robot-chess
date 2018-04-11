@@ -87,13 +87,13 @@ public class ChessControl {
         } else if (command.startsWith("force")) {
             String[] split = command.split(" ");
             Pair<StepperMotor, StepperMotor> motors = ((Workspace) workspace).getMotors();
-            motors.getKey()  .stepTo(Double.parseDouble(split[1]), 2);
-            motors.getValue().stepTo(Double.parseDouble(split[2]), 2);
+            motors.getKey()  .stepTo(Double.parseDouble(split[1]));
+            motors.getValue().stepTo(Double.parseDouble(split[2]));
         } else if (command.startsWith("goto")) {
             String[] split = command.split(" ");
             Pair<StepperMotor, StepperMotor> motors = ((Workspace) workspace).getMotors();
-            motors.getKey()  .stepTo(new TilePosition(split[2]).toStepPosition().x, 2);
-            motors.getValue().stepTo(new TilePosition(split[2]).toStepPosition().y, 2);
+            motors.getKey()  .stepTo(new TilePosition(split[2]).toStepPosition().x);
+            motors.getValue().stepTo(new TilePosition(split[2]).toStepPosition().y);
         }
 
         if (command.length() != 4) return;

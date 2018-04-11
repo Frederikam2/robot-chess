@@ -24,6 +24,7 @@ public class MechanicalControl {
     private void submit(Runnable r) {
         executor.submit(() -> {
             try {
+                log.info("Running " + r);
                 r.run();
             } catch (Exception e) {
                 log.error("Caught fatal exception", e);
@@ -87,6 +88,7 @@ public class MechanicalControl {
 
     public void reset() {
         // We will automatically stop any motor that triggers one of the microswitches
-        submit(() -> workspace.moveToSync(new StepPosition(-50000, -50000)));
+        log.info("Queued reset");
+        submit(() -> workspace.moveToSync(new StepPosition(10000, 10000)));
     }
 }

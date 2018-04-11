@@ -28,7 +28,7 @@ public class Workspace implements IWorkspace {
     private final GpioPinDigitalOutput magnet;
 
     public Workspace() {
-        stepperX = new StepperMotor(RaspiPin.GPIO_00, RaspiPin.GPIO_01, RaspiPin.GPIO_02, RaspiPin.GPIO_03, RaspiPin.GPIO_09);
+        stepperX = new StepperMotor(RaspiPin.GPIO_00, RaspiPin.GPIO_01, RaspiPin.GPIO_02, RaspiPin.GPIO_03, RaspiPin.GPIO_12);
         stepperY = new StepperMotor(RaspiPin.GPIO_04, RaspiPin.GPIO_05, RaspiPin.GPIO_06, RaspiPin.GPIO_07, RaspiPin.GPIO_10);
         magnet = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08);
     }
@@ -50,8 +50,8 @@ public class Workspace implements IWorkspace {
 
         log.info("Moving to x: {}, y: {}, time: {}ms", position.x, position.y, time);
 
-        Future futureX = stepperExecutor.submit(() -> runStepperX(deltaX, time));
-        Future futureY = stepperExecutor.submit(() -> runStepperY(deltaY, time));
+        Future futureX = stepperExecutor.submit(() -> runStepper(stepperX, deltaX, time));
+        Future futureY = stepperExecutor.submit(() -> runStepper(stepperY, deltaY, time));
 
         try {
             futureX.get();
@@ -61,12 +61,10 @@ public class Workspace implements IWorkspace {
         }
     }
 
-    private void runStepperX(double steps, int time) {
+    private void runStepper(StepperMotor stepper, double steps, int time) {
         if (time == 0 || steps == 0) return;
 
-        // Stepper X steps at a constant interval of 4ms.
-        double interval = 4;
-        double targetCycleSteps = 25; // 1/16 revolution
+        double targetCycleSteps = 100; // 1/4 revolution
         double cycles = steps / targetCycleSteps;
 
         // Adjust the number of cycles to a non-zero integer
@@ -75,21 +73,12 @@ public class Workspace implements IWorkspace {
         //noinspection CodeBlock2Expr
         try {
             new NanosecondExecutor(() -> {
-                stepperX.step(stepsPerCycle, (int) interval);
+                stepper.step(stepsPerCycle);
             }, (int) cycles, (int) ((time / cycles) * 1000000))
                     .run();
         } catch (InterruptedException e) {
             log.error("Interrupted while running stepper", e);
         }
-    }
-
-    private void runStepperY(double steps, int time) {
-        if (time == 0 || steps == 0) return;
-        // Ranging from 0 to 1
-        double speed = (MIN_STEP_INTERVAL * Math.abs(steps)) / ((double) time);
-        double interval = MIN_STEP_INTERVAL / speed;
-        // Stepper Y supports variable speed, unlike stepper X which behaves weird instead
-        stepperX.step(steps, (int) interval);
     }
 
     @Override
