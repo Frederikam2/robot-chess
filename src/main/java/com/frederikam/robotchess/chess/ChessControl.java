@@ -1,10 +1,9 @@
 package com.frederikam.robotchess.chess;
 
-import com.frederikam.robotchess.Constants;
 import com.frederikam.robotchess.Launcher;
 import com.frederikam.robotchess.chess.pieces.ChessPiece;
 import com.frederikam.robotchess.mech.*;
-import javafx.util.Pair;
+import com.frederikam.robotchess.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,14 +86,12 @@ public class ChessControl {
             return;
         } else if (command.startsWith("force")) {
             String[] split = command.split(" ");
-            Pair<StepperMotor, StepperMotor> motors = ((Workspace) workspace).getMotors();
-            motors.getKey()  .stepTo(Double.parseDouble(split[1]));
-            motors.getValue().stepTo(Double.parseDouble(split[2]));
+            StepPosition stepPos = new StepPosition(Double.parseDouble(split[1]), Double.parseDouble(split[2]));
+            mechanicalControl.submit(() -> workspace.moveToSync(stepPos));
         } else if (command.startsWith("goto")) {
             String[] split = command.split(" ");
-            Pair<StepperMotor, StepperMotor> motors = ((Workspace) workspace).getMotors();
-            motors.getKey()  .stepTo(new TilePosition(split[2]).toStepPosition().x);
-            motors.getValue().stepTo(new TilePosition(split[2]).toStepPosition().y);
+            StepPosition position = new TilePosition(split[1]).toStepPosition();
+            mechanicalControl.submit(() -> workspace.moveToSync(position));
         }
 
         if (command.length() != 4) return;

@@ -60,10 +60,10 @@ public class StepperMotor {
         // (This is the most basic method, turning on a single electromagnet every time.
         //  This sequence requires the least amount of energy and generates the smoothest movement.)
         byte[] singleStepForwardSeq = new byte[4];
-        singleStepForwardSeq[0] = (byte) 0b1000;
-        singleStepForwardSeq[1] = (byte) 0b0100;
-        singleStepForwardSeq[2] = (byte) 0b0010;
-        singleStepForwardSeq[3] = (byte) 0b0001;
+        singleStepForwardSeq[0] = (byte) 0b0001;
+        singleStepForwardSeq[1] = (byte) 0b0010;
+        singleStepForwardSeq[2] = (byte) 0b0100;
+        singleStepForwardSeq[3] = (byte) 0b1000;
 
         motor.setStepsPerRevolution(STEPS_PER_REVOLUTION);
         motor.setStepSequence(singleStepForwardSeq);
@@ -78,14 +78,15 @@ public class StepperMotor {
         int roundedSteps = (int) (Math.floor(newPos) - Math.floor(startPos));
         //log.info("Rounded {}", roundedSteps);
 
-        //log.info("{} {} {} {}", swtch, swtch.isHigh(), steps < 0, steps);
+        log.info("{} {} {} {}", swtch, swtch.isHigh(), steps < 0, steps);
 
         if (steps < 0 && swtch.isHigh()) {
             //log.warn("Ignored movement because we are already at 0!");
             position.set(0);
         } else {
             goingBackwards = steps < 0;
-            motor.step(roundedSteps);
+            log.info("Rounded {}", -roundedSteps);
+            motor.step(-roundedSteps);
             goingBackwards = false;
         }
     }
@@ -99,8 +100,9 @@ public class StepperMotor {
     }
 
     private void recurringTask() {
+        //log.info(goingBackwards+" "+swtch.isHigh());
         if (goingBackwards && swtch.isHigh()) {
-            log.info("Motor triggered microswitch");
+            log.info("Motor triggered microswitch {}", swtch);
             motor.interrupt();
             position.set(0);
         }
@@ -148,7 +150,7 @@ public class StepperMotor {
                 } else {
                     for (long index = steps; index < 0; index++) {
                         if (interrupted) break;
-                        doStep.invoke(this, true);
+                        doStep.invoke(this, false);
                     }
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {

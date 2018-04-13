@@ -2,7 +2,6 @@ package com.frederikam.robotchess.mech;
 
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.RaspiPin;
-import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,10 +88,6 @@ public class Workspace implements IWorkspace {
     @Override
     public void setMagnetEnabled(boolean enabled) {
         magnet.setState(enabled);
-    }
-
-    public Pair<StepperMotor, StepperMotor> getMotors() {
-        return new Pair<>(stepperX, stepperY);
     }
 
 }

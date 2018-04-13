@@ -1,9 +1,9 @@
 package com.frederikam.robotchess.mech;
 
-import com.frederikam.robotchess.Constants;
+import com.frederikam.robotchess.util.Constants;
 import com.frederikam.robotchess.chess.TilePosition;
 
-import static com.frederikam.robotchess.Constants.BOARD_BOTTOM_LEFT;
+import static com.frederikam.robotchess.util.Constants.BOARD_BOTTOM_LEFT;
 
 public class StepPosition {
 

@@ -1,9 +1,11 @@
 package com.frederikam.robotchess;
 
+import com.frederikam.robotchess.audio.ChessLocale;
 import com.frederikam.robotchess.audio.SpeechService;
 import com.frederikam.robotchess.chess.ChessControl;
 import com.frederikam.robotchess.chess.Chessboard;
 import com.frederikam.robotchess.mech.VoiceButtonHandler;
+import com.frederikam.robotchess.util.CliInputManager;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.RaspiPin;
@@ -26,7 +28,7 @@ public class Launcher {
         log.info("Started game\n" + chessboard.getBoardStateString());
 
         ChessControl chessControl = new ChessControl(chessboard);
-        SpeechService speechService = null;//new SpeechService(chessControl, new ChessLocale.Danish());
+        SpeechService speechService = new SpeechService(chessControl, new ChessLocale.Danish());
         new CliInputManager(chessControl, speechService, System.in).start();
 
         if (gpio != null) {
@@ -35,12 +37,10 @@ public class Launcher {
 
         chessControl.getMechanicalControl().reset();
 
-
-        /*
-        chessControl.processCommand("force 400 400");
-        chessControl.processCommand("force 400 800");
         chessControl.processCommand("force 800 800");
-        chessControl.processCommand("force 100 100");*/
+        chessControl.processCommand("force 800 1600");
+        chessControl.processCommand("force 1600 1600");
+        chessControl.processCommand("force 0 0");
 
         //noinspection ConstantConditions
         /*if (true) {

@@ -1,6 +1,6 @@
 package com.frederikam.robotchess.mech;
 
-import com.frederikam.robotchess.Constants;
+import com.frederikam.robotchess.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ public class MechanicalControl {
         );
     }
 
-    private void submit(Runnable r) {
+    public void submit(Runnable r) {
         executor.submit(() -> {
             try {
                 log.info("Running " + r);
@@ -89,6 +89,6 @@ public class MechanicalControl {
     public void reset() {
         // We will automatically stop any motor that triggers one of the microswitches
         log.info("Queued reset");
-        submit(() -> workspace.moveToSync(new StepPosition(-10000, -10000)));
+        submit(() -> workspace.moveToSync(new StepPosition(-1000000, -1000000)));
     }
 }

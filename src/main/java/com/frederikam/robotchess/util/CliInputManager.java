@@ -1,4 +1,4 @@
-package com.frederikam.robotchess;
+package com.frederikam.robotchess.util;
 
 import com.frederikam.robotchess.audio.SpeechService;
 import com.frederikam.robotchess.chess.ChessControl;
@@ -15,7 +15,7 @@ public class CliInputManager extends Thread {
     private final SpeechService speechService;
     private final InputStream is;
 
-    CliInputManager(ChessControl chessControl, SpeechService speechService, InputStream stream) {
+    public CliInputManager(ChessControl chessControl, SpeechService speechService, InputStream stream) {
         this.chessControl = chessControl;
         this.speechService = speechService;
         this.is = stream;

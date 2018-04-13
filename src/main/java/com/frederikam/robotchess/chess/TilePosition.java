@@ -1,6 +1,6 @@
 package com.frederikam.robotchess.chess;
 
-import com.frederikam.robotchess.Constants;
+import com.frederikam.robotchess.util.Constants;
 import com.frederikam.robotchess.mech.StepPosition;
 
 import java.util.Objects;

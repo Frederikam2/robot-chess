@@ -1,4 +1,4 @@
-package com.frederikam.robotchess;
+package com.frederikam.robotchess.util;
 
 import com.frederikam.robotchess.mech.StepPosition;
 
