@@ -2,44 +2,40 @@ package com.frederikam.robotchess.audio;
 
 import com.frederikam.robotchess.chess.ChessControl;
 import com.frederikam.robotchess.chess.TilePosition;
-import com.google.api.gax.rpc.ApiStreamObserver;
-import com.google.api.gax.rpc.BidiStreamingCallable;
-import com.google.cloud.speech.v1.*;
-import com.google.protobuf.ByteString;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.sampled.*;
-import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-public class SpeechService implements LineListener {
+public class SpeechService extends WebSocketClient {
 
     private static final Logger log = LoggerFactory.getLogger(SpeechService.class);
     private volatile boolean listening = false;
     private final ChessLocale locale;
+    private final TranscriptRecipient recipient;
 
-    public void setListening(boolean listening) {
-        if (!this.listening && listening) {
-            // We are starting
-            startListening();
-        } else if (this.listening && !listening) {
-            // We are stopping
-            onCompleted();
-        }
-        this.listening = listening;
+    public SpeechService(ChessControl control, ChessLocale locale, HashMap<String, String> headers) {
+        super(URI.create("ws://10.144.97.192:12345"), headers);
+
+        this.locale = locale;
+        recipient = new TranscriptRecipient(control);
     }
 
-    public boolean isListening() {
-        return listening;
+    public static HashMap<String, String> generateHeaders(ChessLocale locale) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("locale", locale.voiceLocale());
+        List<String> list = getKeywords(locale);
+        map.put("keywords", new JSONArray(list).toString());
+        return map;
     }
 
-    private List<String> getKeywords() {
+    private static List<String> getKeywords(ChessLocale locale) {
         LinkedList<String> list = new LinkedList<>();
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
@@ -50,5 +46,34 @@ public class SpeechService implements LineListener {
         list.addAll(locale.getKeywords());
 
         return list;
+    }
+
+    public void setListening(boolean listening) {
+        this.listening = listening;
+        send(Boolean.toString(listening));
+    }
+
+    public boolean isListening() {
+        return listening;
+    }
+
+    @Override
+    public void onOpen(ServerHandshake handshakeData) {
+        log.info("Connected");
+    }
+
+    @Override
+    public void onMessage(String message) {
+        recipient.parsePhrase(message);
+    }
+
+    @Override
+    public void onClose(int code, String reason, boolean remote) {
+        log.warn("WS closed. Code: ", code);
+    }
+
+    @Override
+    public void onError(Exception ex) {
+        log.error("Error in WS", ex);
     }
 }

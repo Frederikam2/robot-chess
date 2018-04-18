@@ -5,11 +5,6 @@ import com.frederikam.robotchess.chess.ChessUtil;
 import com.frederikam.robotchess.chess.Chessboard;
 import com.frederikam.robotchess.chess.TilePosition;
 import com.frederikam.robotchess.chess.pieces.ChessPiece;
-import com.google.api.gax.rpc.ApiStreamObserver;
-import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
-import com.google.cloud.speech.v1.StreamingRecognitionResult;
-import com.google.cloud.speech.v1.StreamingRecognizeResponse;
-import com.google.common.util.concurrent.SettableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,42 +12,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-class TranscriptRecipient<T> implements ApiStreamObserver<T> {
+class TranscriptRecipient {
 
     private static final Logger log = LoggerFactory.getLogger(TranscriptRecipient.class);
 
-    private final SettableFuture<List<T>> future = SettableFuture.create();
-    private final List<T> messages = new java.util.ArrayList<>();
-    private final LinkedList<String> transcripts = new LinkedList<>();
     private final ChessControl chessControl;
-    private final ChessLocale chessLocale;
 
-    TranscriptRecipient(ChessControl chessControl, ChessLocale chessLocale) {
+    TranscriptRecipient(ChessControl chessControl) {
         this.chessControl = chessControl;
-        this.chessLocale = chessLocale;
     }
 
-    @Override
-    public void onNext(T m) {
-        messages.add(m);
-        StreamingRecognizeResponse message = (StreamingRecognizeResponse) m;
-
-        for (StreamingRecognitionResult res : message.getResultsList()) {
-            for (SpeechRecognitionAlternative alt : res.getAlternativesList()) {
-                String transcript = alt.getTranscript();
-                if (transcripts.contains(transcript)) continue; // Already attempted
-                log.info("Voice: " + transcript);
-                transcripts.add(transcript);
-                try {
-                    parsePhrase(transcript);
-                } catch (RuntimeException e) {
-                    log.error("Error processing command", e);
-                }
-            }
-        }
-    }
-
-    private void parsePhrase(String s) {
+    public void parsePhrase(String s) {
         if(ChessLocale.phraseContainsResetCommand(s)) {
             chessControl.resetBoard();
             return;
@@ -114,22 +84,6 @@ class TranscriptRecipient<T> implements ApiStreamObserver<T> {
         }
 
         return ChessLocale.interpretChessPiece(s);
-    }
-
-    @Override
-    public void onError(Throwable t) {
-        log.info("Speech API error", t);
-        future.setException(t);
-    }
-
-    @Override
-    public void onCompleted() {
-        future.set(messages);
-    }
-
-    // Returns the SettableFuture object to get received messages / exceptions.
-    public SettableFuture<List<T>> future() {
-        return future;
     }
 }
 

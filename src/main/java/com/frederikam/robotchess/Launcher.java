@@ -1,5 +1,6 @@
 package com.frederikam.robotchess;
 
+import com.frederikam.robotchess.audio.ChessLocale;
 import com.frederikam.robotchess.audio.SpeechService;
 import com.frederikam.robotchess.chess.ChessControl;
 import com.frederikam.robotchess.chess.Chessboard;
@@ -27,7 +28,8 @@ public class Launcher {
         log.info("Started game\n" + chessboard.getBoardStateString());
 
         ChessControl chessControl = new ChessControl(chessboard);
-        SpeechService speechService = null;//*/new SpeechService(chessControl, new ChessLocale.Danish());
+        ChessLocale loc = new  ChessLocale.Danish();
+        SpeechService speechService = new SpeechService(chessControl, loc, SpeechService.generateHeaders(loc));
         new CliInputManager(chessControl, speechService, System.in).start();
 
         if (gpio != null) {
