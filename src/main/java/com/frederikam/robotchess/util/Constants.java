@@ -12,7 +12,7 @@ public class Constants {
                     + (BOARD_TOP_RIGHT.x - TILE_WIDTH * 11) / 2 // "TILE_WIDTH * 11" is the effectively used width
             , 0);
 
-    public static final double HALF_TILE_WIDTH = TILE_WIDTH/2;
-    public static final double PIECE_DIAMETER = TILE_WIDTH/2;
+    public static final double HALF_TILE_WIDTH = TILE_WIDTH / 2;
+    public static final double PIECE_DIAMETER = TILE_WIDTH / 2;
 
 }
