@@ -1,6 +1,5 @@
 package com.frederikam.robotchess;
 
-import com.frederikam.robotchess.audio.ChessLocale;
 import com.frederikam.robotchess.audio.SpeechService;
 import com.frederikam.robotchess.chess.ChessControl;
 import com.frederikam.robotchess.chess.Chessboard;
@@ -28,19 +27,21 @@ public class Launcher {
         log.info("Started game\n" + chessboard.getBoardStateString());
 
         ChessControl chessControl = new ChessControl(chessboard);
-        SpeechService speechService = new SpeechService(chessControl, new ChessLocale.Danish());
+        //Environment.put("GOOGLE_APPLICATION_CREDENTIALS", "/home/pi/auth.json");
+        SpeechService speechService = null;//*/new SpeechService(chessControl, new ChessLocale.Danish());
         new CliInputManager(chessControl, speechService, System.in).start();
 
         if (gpio != null) {
             new VoiceButtonHandler(RaspiPin.GPIO_11, speechService);
         }
 
+        /*
         chessControl.getMechanicalControl().reset();
 
-        chessControl.processCommand("force 800 800");
-        chessControl.processCommand("force 800 1600");
+        chessControl.processCommand("force 1600 800");
         chessControl.processCommand("force 1600 1600");
-        chessControl.processCommand("force 0 0");
+        chessControl.processCommand("force 2000 1600");
+        chessControl.processCommand("force 0 0");*/
 
         //noinspection ConstantConditions
         /*if (true) {

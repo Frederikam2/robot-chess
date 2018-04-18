@@ -80,18 +80,20 @@ public class ChessControl {
 
     // From stdin
     public void processCommand(String command) {
-        if (command.equals("reset")) {
+        if (command.startsWith("RESET")) {
             log.info("resetting");
             mechanicalControl.reset();
             return;
-        } else if (command.startsWith("force")) {
+        } else if (command.startsWith("FORCE")) {
             String[] split = command.split(" ");
             StepPosition stepPos = new StepPosition(Double.parseDouble(split[1]), Double.parseDouble(split[2]));
             mechanicalControl.submit(() -> workspace.moveToSync(stepPos));
-        } else if (command.startsWith("goto")) {
+            return;
+        } else if (command.startsWith("GOTO")) {
             String[] split = command.split(" ");
             StepPosition position = new TilePosition(split[1]).toStepPosition();
             mechanicalControl.submit(() -> workspace.moveToSync(position));
+            return;
         }
 
         if (command.length() != 4) return;
