@@ -101,6 +101,10 @@ public class ChessControl {
 
             mechanicalControl.submit(() -> workspace.moveToSync(position.toStepPosition()));
             return;
+        } else if (command.startsWith("MAGNET")) {
+            String[] split = command.split(" ");
+            workspace.setMagnetEnabled(Boolean.parseBoolean(split[1]));
+            return;
         }
 
         if (command.length() != 4) return;
