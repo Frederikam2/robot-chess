@@ -91,8 +91,15 @@ public class ChessControl {
             return;
         } else if (command.startsWith("GOTO")) {
             String[] split = command.split(" ");
-            StepPosition position = new TilePosition(split[1]).toStepPosition();
-            mechanicalControl.submit(() -> workspace.moveToSync(position));
+
+            TilePosition position;
+            if (split.length == 2) {
+                position = new TilePosition(split[1]);
+            } else {
+                position = new TilePosition(Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+            }
+
+            mechanicalControl.submit(() -> workspace.moveToSync(position.toStepPosition()));
             return;
         }
 
