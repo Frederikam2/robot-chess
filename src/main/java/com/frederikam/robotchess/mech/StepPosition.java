@@ -39,8 +39,8 @@ public class StepPosition {
         //Constants.BOARD_BOTTOM_LEFT.x + Constants.TILE_WIDTH*x + Constants.HALF_TILE_WIDTH,
         //Constants.BOARD_BOTTOM_LEFT.y + Constants.TILE_WIDTH*y + Constants.HALF_TILE_WIDTH
 
-        int tileX = (int) Math.round((x - BOARD_BOTTOM_LEFT.x - Constants.HALF_TILE_WIDTH) / Constants.TILE_WIDTH);
-        int tileY = (int) Math.round((y - BOARD_BOTTOM_LEFT.y - Constants.HALF_TILE_WIDTH) / Constants.TILE_WIDTH);
+        int tileX = (int) Math.round((x - BOARD_BOTTOM_LEFT.x) / Constants.TILE_WIDTH);
+        int tileY = (int) Math.round((y - BOARD_BOTTOM_LEFT.y) / Constants.TILE_WIDTH);
 
         return new TilePosition(tileX, tileY);
     }

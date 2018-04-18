@@ -64,8 +64,8 @@ public class TilePosition {
 
     public StepPosition toStepPosition() {
         return new StepPosition(
-                Constants.BOARD_BOTTOM_LEFT.x + Constants.TILE_WIDTH*x + Constants.HALF_TILE_WIDTH,
-                Constants.BOARD_BOTTOM_LEFT.y + Constants.TILE_WIDTH*y + Constants.HALF_TILE_WIDTH
+                Constants.BOARD_BOTTOM_LEFT.x + Constants.TILE_WIDTH*x,
+                Constants.BOARD_BOTTOM_LEFT.y + Constants.TILE_WIDTH*y
         );
     }
 
