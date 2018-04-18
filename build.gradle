@@ -21,7 +21,6 @@ dependencies {
     compile 'com.pi4j:pi4j-device:1.2-SNAPSHOT'
     compile group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '3.1.0'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    compile 'com.google.cloud:google-cloud-speech:0.39.0-alpha'
 }
 
 jar {

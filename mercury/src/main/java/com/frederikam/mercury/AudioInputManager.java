@@ -1,4 +1,4 @@
-package com.frederikam.robotchess.audio;
+package com.frederikam.mercury;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
