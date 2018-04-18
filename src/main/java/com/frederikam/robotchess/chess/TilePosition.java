@@ -22,14 +22,14 @@ public class TilePosition {
         char letter = tile.charAt(0);
         switch (letter) {
             //@formatter:off
-            case 'a': x = 0; break;
-            case 'b': x = 1; break;
-            case 'c': x = 2; break;
-            case 'd': x = 3; break;
-            case 'e': x = 4; break;
-            case 'f': x = 5; break;
-            case 'g': x = 6; break;
-            case 'h': x = 7; break;
+            case 'a': x = 2; break;
+            case 'b': x = 3; break;
+            case 'c': x = 4; break;
+            case 'd': x = 5; break;
+            case 'e': x = 6; break;
+            case 'f': x = 7; break;
+            case 'g': x = 8; break;
+            case 'h': x = 9; break;
             default: x = -1; break;
             //@formatter:on
         }
@@ -71,15 +71,15 @@ public class TilePosition {
 
     public String toTileNotation() {
         switch (x) {
-            case 0: return "A" + y;
-            case 1: return "B" + y;
-            case 2: return "C" + y;
-            case 3: return "D" + y;
-            case 4: return "E" + y;
-            case 5: return "F" + y;
-            case 6: return "G" + y;
-            case 7: return "H" + y;
-            default: throw new RuntimeException("Invalid tile position: " + this);
+            case 2: return "A" + y;
+            case 3: return "B" + y;
+            case 4: return "C" + y;
+            case 5: return "D" + y;
+            case 6: return "E" + y;
+            case 7: return "F" + y;
+            case 8: return "G" + y;
+            case 9: return "H" + y;
+            default: return "TilePosition[" + x + ", " + y + "]";
         }
     }
 

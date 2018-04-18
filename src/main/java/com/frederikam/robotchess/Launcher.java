@@ -27,7 +27,6 @@ public class Launcher {
         log.info("Started game\n" + chessboard.getBoardStateString());
 
         ChessControl chessControl = new ChessControl(chessboard);
-        //Environment.put("GOOGLE_APPLICATION_CREDENTIALS", "/home/pi/auth.json");
         SpeechService speechService = null;//*/new SpeechService(chessControl, new ChessLocale.Danish());
         new CliInputManager(chessControl, speechService, System.in).start();
 
