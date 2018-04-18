@@ -13,7 +13,7 @@ class TranscriptRecipient(private val callback: Consumer<String>) : ApiStreamObs
         private val log: Logger = LoggerFactory.getLogger(TranscriptRecipient::class.java)
     }
 
-    private val future = SettableFuture.create<List<StreamingRecognizeResponse>>()
+    val future = SettableFuture.create<List<StreamingRecognizeResponse>>()!!
     private val messages = mutableListOf<StreamingRecognizeResponse>()
     private val transcripts = mutableListOf<String>()
 

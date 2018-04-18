@@ -1,6 +1,5 @@
 package com.frederikam.mercury;
 
-import com.frederikam.robotchess.chess.TilePosition;
 import com.google.api.gax.rpc.ApiStreamObserver;
 import com.google.api.gax.rpc.BidiStreamingCallable;
 import com.google.cloud.speech.v1.*;
@@ -46,11 +45,13 @@ public class SpeechService implements LineListener {
             throw new RuntimeException(e);
         }
 
+        SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(keywords).build();
+
         RecognitionConfig recConfig = RecognitionConfig.newBuilder()
                 .setEncoding(UPLOAD_FORMAT)
                 .setLanguageCode(language)
                 .setSampleRateHertz(SAMPLE_RATE)
-                .addSpeechContexts(getSpeechContext())
+                .addSpeechContexts(speechContext)
                 .build();
         streamingConfig = StreamingRecognitionConfig.newBuilder()
                 .setConfig(recConfig)
@@ -58,7 +59,7 @@ public class SpeechService implements LineListener {
                 .build();
     }
 
-    public void setListening(boolean listening) {
+    void setListening(boolean listening) {
         if (!this.listening && listening) {
             // We are starting
             startListening();
@@ -67,10 +68,6 @@ public class SpeechService implements LineListener {
             onCompleted();
         }
         this.listening = listening;
-    }
-
-    public boolean isListening() {
-        return listening;
     }
 
     private void startListening() {
@@ -85,7 +82,7 @@ public class SpeechService implements LineListener {
             throw new RuntimeException(e);
         }
 
-        responseObserver = new TranscriptRecipient(s -> socket.);
+        responseObserver = new TranscriptRecipient(socket::send);
 
         BidiStreamingCallable<StreamingRecognizeRequest,StreamingRecognizeResponse> callable =
                 speech.streamingRecognizeCallable();
@@ -117,7 +114,7 @@ public class SpeechService implements LineListener {
         requestObserver.onCompleted();
         List<StreamingRecognizeResponse> responses;
         try {
-            responses = responseObserver.future().get();
+            responses = responseObserver.getFuture().get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -154,19 +151,5 @@ public class SpeechService implements LineListener {
                 log.info("Audio line closed");
                 break;
         }
-    }
-
-    private SpeechContext getSpeechContext() {
-        SpeechContext.Builder builder = SpeechContext.newBuilder();
-
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                builder.addPhrases(new TilePosition(x, y).toTileNotation());
-            }
-        }
-
-        builder.addAllPhrases(locale.getKeywords());
-
-        return builder.build();
     }
 }
