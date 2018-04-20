@@ -94,6 +94,6 @@ public class TilePosition {
     }
 
     public static boolean isValidTile(String s) {
-        return PATTERN.matcher(s).matches();
+        return PATTERN.matcher(s.toUpperCase()).matches();
     }
 }
