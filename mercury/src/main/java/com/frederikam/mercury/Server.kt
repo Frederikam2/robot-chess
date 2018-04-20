@@ -15,6 +15,10 @@ class Server : WebSocketServer(InetSocketAddress(12345)) {
         private val log: Logger = LoggerFactory.getLogger(Server::class.java)
     }
 
+    init {
+        isReuseAddr = true
+    }
+
     private var speech: SpeechService? = null
 
     override fun onOpen(conn: WebSocket, handshake: ClientHandshake) {
