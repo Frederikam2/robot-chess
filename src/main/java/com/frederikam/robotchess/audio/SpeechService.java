@@ -21,7 +21,7 @@ public class SpeechService extends WebSocketClient {
     private final TranscriptRecipient recipient;
 
     public SpeechService(ChessControl control, ChessLocale locale, HashMap<String, String> headers) {
-        super(URI.create("ws://10.144.97.192:12345"), headers);
+        super(URI.create("ws://10.144.96.158:12345"), headers);
 
         this.locale = locale;
         recipient = new TranscriptRecipient(control);

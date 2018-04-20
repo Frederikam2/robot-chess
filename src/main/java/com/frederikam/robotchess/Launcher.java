@@ -36,6 +36,8 @@ public class Launcher {
             new VoiceButtonHandler(RaspiPin.GPIO_11, speechService);
         }
 
+        speechService.connect();
+
         /*
         chessControl.getMechanicalControl().reset();
 

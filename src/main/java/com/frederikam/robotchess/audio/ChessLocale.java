@@ -42,9 +42,14 @@ public abstract class ChessLocale {
         }
     }
 
+    static boolean phraseContainsRestartCommand(String phrase) {
+        return phrase.toLowerCase().contains("restart")
+                || phrase.toLowerCase().contains("genstart");
+    }
+
     static boolean phraseContainsResetCommand(String phrase) {
-        return phrase.contains("reset")
-                || phrase.contains("nulstil");
+        return phrase.toLowerCase().contains("reset")
+                || phrase.toLowerCase().contains("nulstil");
     }
 
     public static class English extends ChessLocale {
@@ -65,6 +70,7 @@ public abstract class ChessLocale {
             list.add("king");
             list.add("queen");
             list.add("reset");
+            list.add("restart");
 
             return list;
         }
@@ -89,6 +95,7 @@ public abstract class ChessLocale {
             list.add("konge");
             list.add("dronning");
             list.add("nulstil");
+            list.add("genstart");
 
             return list;
         }

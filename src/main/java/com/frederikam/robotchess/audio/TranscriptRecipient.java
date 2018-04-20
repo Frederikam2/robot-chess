@@ -23,17 +23,24 @@ class TranscriptRecipient {
     }
 
     public void parsePhrase(String s) {
-        if(ChessLocale.phraseContainsResetCommand(s)) {
+        if(ChessLocale.phraseContainsRestartCommand(s)) {
             chessControl.resetBoard();
             return;
+        } else if(ChessLocale.phraseContainsResetCommand(s)) {
+            chessControl.getMechanicalControl().reset();
+            return;
         }
+
+        log.info("Voice: {}", s);
 
         String[] words = s.split(" ");
         LinkedList<Object> targets = new LinkedList<>();
         for (String word : words) {
             Optional<?> opt = parseWord(word);
-            targets.add(opt);
+            opt.ifPresent(targets::add);
         }
+
+        log.info("" + targets);
 
         // If we don't have just two targets, the phrase is ambiguous
         if (targets.size() != 2) return;
@@ -43,7 +50,7 @@ class TranscriptRecipient {
         Chessboard chessboard = chessControl.getChessboard();
 
         if (from instanceof TilePosition && to instanceof TilePosition) {
-            chessControl.move((TilePosition) from, (TilePosition) to);
+            chessControl.move((TilePosition) from, (TilePosition) to, false);
         } else if (from instanceof Class && to instanceof Class) {
             log.warn("Can't parse going from {} to {}", from, to);
         } else if (from instanceof Class) {
@@ -56,7 +63,7 @@ class TranscriptRecipient {
 
             if (candidates.size() == 1) {
                 //noinspection ConstantConditions
-                chessControl.move(candidates.get(0).getPosition(), (TilePosition) to);
+                chessControl.move(candidates.get(0).getPosition(), (TilePosition) to, false);
             } else {
                 log.warn("From {} to {} is ambiguous", from, to);
             }
@@ -69,7 +76,7 @@ class TranscriptRecipient {
 
             if (toMoveTo.size() == 1) {
                 //noinspection ConstantConditions
-                chessControl.move((TilePosition) from, toMoveTo.get(0).getPosition());
+                chessControl.move((TilePosition) from, toMoveTo.get(0).getPosition(), false);
             } else {
                 log.warn("From {} to {} is ambiguous", from, to);
             }
