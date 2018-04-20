@@ -22,7 +22,7 @@ public class Launcher {
         gpio = SystemInfo.getOsArch().equals("amd64") ? null : GpioFactory.getInstance();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Chessboard chessboard = new Chessboard();
         chessboard.populate();
         log.info("Started game\n" + chessboard.getBoardStateString());
@@ -36,11 +36,11 @@ public class Launcher {
             new VoiceButtonHandler(RaspiPin.GPIO_11, speechService);
         }
 
-        speechService.connect();
+        chessControl.getMechanicalControl().reset();
+        chessControl.getWorkspace().setMagnetEnabled(false);
+        speechService.connectBlocking();
 
         /*
-        chessControl.getMechanicalControl().reset();
-
         chessControl.processCommand("force 1600 800");
         chessControl.processCommand("force 1600 1600");
         chessControl.processCommand("force 2000 1600");
