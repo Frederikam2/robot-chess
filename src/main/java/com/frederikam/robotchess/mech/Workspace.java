@@ -63,7 +63,7 @@ public class Workspace implements IWorkspace {
     private void runStepper(StepperMotor stepper, double steps, int time) {
         if (time == 0 || steps == 0) return;
 
-        double targetCycleSteps = 100; // 1/4 revolution
+        double targetCycleSteps = 25; // 1/16 revolution
         double cycles = steps / targetCycleSteps;
 
         // Adjust the number of cycles to a non-zero integer
