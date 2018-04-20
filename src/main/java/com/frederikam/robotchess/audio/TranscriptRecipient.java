@@ -51,6 +51,7 @@ class TranscriptRecipient {
 
         if (from instanceof TilePosition && to instanceof TilePosition) {
             chessControl.move((TilePosition) from, (TilePosition) to, false);
+            chessControl.getChessboard().onTurnEnd();
         } else if (from instanceof Class && to instanceof Class) {
             log.warn("Can't parse going from {} to {}", from, to);
         } else if (from instanceof Class) {
@@ -64,6 +65,7 @@ class TranscriptRecipient {
             if (candidates.size() == 1) {
                 //noinspection ConstantConditions
                 chessControl.move(candidates.get(0).getPosition(), (TilePosition) to, false);
+                chessControl.getChessboard().onTurnEnd();
             } else {
                 log.warn("From {} to {} is ambiguous", from, to);
             }
@@ -77,6 +79,7 @@ class TranscriptRecipient {
             if (toMoveTo.size() == 1) {
                 //noinspection ConstantConditions
                 chessControl.move((TilePosition) from, toMoveTo.get(0).getPosition(), false);
+                chessControl.getChessboard().onTurnEnd();
             } else {
                 log.warn("From {} to {} is ambiguous", from, to);
             }
