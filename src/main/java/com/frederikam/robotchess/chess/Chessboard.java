@@ -40,8 +40,8 @@ public class Chessboard {
         pieces.add(new Rook(this, Alignment.BLACK, new TilePosition(0, 7)));
         pieces.add(new Knight(this, Alignment.BLACK, new TilePosition(1, 7)));
         pieces.add(new Bishop(this, Alignment.BLACK, new TilePosition(2, 7)));
-        pieces.add(new King(this, Alignment.BLACK, new TilePosition(4, 7)));
         pieces.add(new Queen(this, Alignment.BLACK, new TilePosition(3, 7)));
+        pieces.add(new King(this, Alignment.BLACK, new TilePosition(4, 7)));
         pieces.add(new Bishop(this, Alignment.BLACK, new TilePosition(5, 7)));
         pieces.add(new Knight(this, Alignment.BLACK, new TilePosition(6, 7)));
         pieces.add(new Rook(this, Alignment.BLACK, new TilePosition(7, 7)));
