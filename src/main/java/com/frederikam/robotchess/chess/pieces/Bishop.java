@@ -32,6 +32,6 @@ public class Bishop extends ChessPiece {
 
     @Override
     public String signatureCharacter() {
-        return alignment == Alignment.WHITE ? "♗" : "♝";
+        return alignment == Alignment.BLACK ? "♗" : "♝";
     }
 }
