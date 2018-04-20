@@ -78,14 +78,14 @@ public class StepperMotor {
         int roundedSteps = (int) (Math.floor(newPos) - Math.floor(startPos));
         //log.info("Rounded {}", roundedSteps);
 
-        log.info("{} {} {} {}", swtch, swtch.isHigh(), steps < 0, steps);
+        //log.info("{} {} {} {}", swtch, swtch.isHigh(), steps < 0, steps);
 
         if (steps < 0 && swtch.isHigh()) {
             //log.warn("Ignored movement because we are already at 0!");
             position.set(0);
         } else {
             goingBackwards = steps < 0;
-            log.info("Rounded {}", -roundedSteps);
+            //log.info("Rounded {}", -roundedSteps);
             motor.step(-roundedSteps);
             goingBackwards = false;
         }
