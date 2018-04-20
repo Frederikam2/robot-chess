@@ -5,9 +5,12 @@ import com.frederikam.robotchess.audio.SpeechService;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VoiceButtonHandler implements GpioPinListenerDigital {
 
+    private static final Logger log = LoggerFactory.getLogger(VoiceButtonHandler.class);
     private final SpeechService speechService;
 
     public VoiceButtonHandler(Pin pin, SpeechService speechService) {
@@ -17,6 +20,7 @@ public class VoiceButtonHandler implements GpioPinListenerDigital {
 
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-        speechService.setListening(event.getState().isHigh());
+        log.info("PTT: {}", event.getState().isLow());
+        speechService.setListening(event.getState().isLow());
     }
 }
