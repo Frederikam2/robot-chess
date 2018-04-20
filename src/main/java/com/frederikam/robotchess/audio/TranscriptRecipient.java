@@ -23,10 +23,10 @@ class TranscriptRecipient {
     }
 
     public void parsePhrase(String s) {
-        if(ChessLocale.phraseContainsRestartCommand(s)) {
+        if (ChessLocale.phraseContainsRestartCommand(s)) {
             chessControl.resetBoard();
             return;
-        } else if(ChessLocale.phraseContainsResetCommand(s)) {
+        } else if (ChessLocale.phraseContainsResetCommand(s)) {
             chessControl.getMechanicalControl().reset();
             return;
         }
@@ -50,8 +50,8 @@ class TranscriptRecipient {
         Chessboard chessboard = chessControl.getChessboard();
 
         if (from instanceof TilePosition && to instanceof TilePosition) {
-            chessControl.move((TilePosition) from, (TilePosition) to, false);
-            chessControl.getChessboard().onTurnEnd();
+            boolean v = chessControl.move((TilePosition) from, (TilePosition) to, false);
+            if (v) chessControl.getChessboard().onTurnEnd();
         } else if (from instanceof Class && to instanceof Class) {
             log.warn("Can't parse going from {} to {}", from, to);
         } else if (from instanceof Class) {
@@ -64,8 +64,8 @@ class TranscriptRecipient {
 
             if (candidates.size() == 1) {
                 //noinspection ConstantConditions
-                chessControl.move(candidates.get(0).getPosition(), (TilePosition) to, false);
-                chessControl.getChessboard().onTurnEnd();
+                boolean v = chessControl.move(candidates.get(0).getPosition(), (TilePosition) to, false);
+                if (v) chessControl.getChessboard().onTurnEnd();
             } else {
                 log.warn("From {} to {} is ambiguous", from, to);
             }
@@ -78,8 +78,8 @@ class TranscriptRecipient {
 
             if (toMoveTo.size() == 1) {
                 //noinspection ConstantConditions
-                chessControl.move((TilePosition) from, toMoveTo.get(0).getPosition(), false);
-                chessControl.getChessboard().onTurnEnd();
+                boolean v = chessControl.move((TilePosition) from, toMoveTo.get(0).getPosition(), false);
+                if (v) chessControl.getChessboard().onTurnEnd();
             } else {
                 log.warn("From {} to {} is ambiguous", from, to);
             }

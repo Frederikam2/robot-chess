@@ -135,7 +135,6 @@ public class ChessControl {
                     piece.get().getClass().getSimpleName(),
                     command.substring(0, 2),
                     command.substring(2, 4));
-            log.info("\n" + getChessboard().getBoardStateString());
             getChessboard().onTurnEnd();
         } else {
             log.info("Invalid move");

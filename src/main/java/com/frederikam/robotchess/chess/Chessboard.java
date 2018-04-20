@@ -76,6 +76,7 @@ public class Chessboard {
 
     public void onTurnEnd() {
         playerOfTurn = playerOfTurn == Alignment.WHITE ? Alignment.BLACK : Alignment.WHITE;
+        log.info("\n" + getBoardStateString());
     }
 
     public String getBoardStateString() {
@@ -97,7 +98,8 @@ public class Chessboard {
             append.accept(getPieceAt(new TilePosition(9, y)));
             b.append("│\n");
         }
-        b.append("└──┴────────┴──┘");
+        b.append("└──┴────────┴──┘\n");
+        b.append("Current turn: " + playerOfTurn);
         return b.toString();
     }
 
