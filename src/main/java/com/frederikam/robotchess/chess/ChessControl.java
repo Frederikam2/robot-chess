@@ -27,9 +27,18 @@ public class ChessControl {
         Optional<ChessPiece> pieceFrom = chessboard.getPieceAt(from);
         Optional<ChessPiece> pieceTo = chessboard.getPieceAt(to);
 
-        if (from.isOutOfBounds()) return false;
-        if (!pieceFrom.isPresent()) return false; // Piece must be present
-        if(!pieceFrom.get().canMoveTo(to) && !force) return false; // Piece refuses to move there
+        if (from.isOutOfBounds()) {
+            log.warn("Can't move out of bounds");
+            return false;
+        }
+        if (!pieceFrom.isPresent()) {
+            log.warn("Can't move from {} when no piece is present", from);
+            return false;
+        }
+        if(!pieceFrom.get().canMoveTo(to) && !force) {
+            log.warn("{} can't move from {} to {}", pieceFrom.get(), from, to);
+            return false;
+        }
 
         pieceTo.ifPresent(chessPiece -> {
             // A piece is here, so we should kill it first
@@ -144,5 +153,9 @@ public class ChessControl {
 
     public Chessboard getChessboard() {
         return chessboard;
+    }
+
+    public IWorkspace getWorkspace() {
+        return workspace;
     }
 }
