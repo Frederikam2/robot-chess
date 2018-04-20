@@ -23,13 +23,13 @@ public class ChessControl {
         this.chessboard = chessboard;
     }
 
-    public boolean move(TilePosition from, TilePosition to) {
+    public boolean move(TilePosition from, TilePosition to, boolean force) {
         Optional<ChessPiece> pieceFrom = chessboard.getPieceAt(from);
         Optional<ChessPiece> pieceTo = chessboard.getPieceAt(to);
 
         if (from.isOutOfBounds()) return false;
         if (!pieceFrom.isPresent()) return false; // Piece must be present
-        if(!pieceFrom.get().canMoveTo(to)) return false; // Piece refuses to move there
+        if(!pieceFrom.get().canMoveTo(to) && !force) return false; // Piece refuses to move there
 
         pieceTo.ifPresent(chessPiece -> {
             // A piece is here, so we should kill it first
@@ -119,7 +119,7 @@ public class ChessControl {
         }
         Optional<ChessPiece> piece = getChessboard().getPieceAt(from);
 
-        boolean valid = move(from, to);
+        boolean valid = move(from, to, false);
         if (valid) {
             //noinspection ConstantConditions
             log.info("Moved {} from {} to {}",
@@ -134,7 +134,8 @@ public class ChessControl {
     }
 
     public void resetBoard() {
-        chessboard.getPieces().forEach((p) -> move(p.getPosition(), p.getStartPosition()));
+        log.info("Reset board requested");
+        chessboard.getPieces().forEach((p) -> move(p.getPosition(), p.getStartPosition(), true));
     }
 
     public MechanicalControl getMechanicalControl() {
