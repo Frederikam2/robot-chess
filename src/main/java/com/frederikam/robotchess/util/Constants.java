@@ -6,8 +6,8 @@ public class Constants {
 
     private static final double LEFT_X = 2275;
     private static final double LEFT_Y = 100;
-    private static final double RIGHT_X = 8190;
-    private static final double RIGHT_Y = 6100; // force 8275.0 6100
+    private static final double RIGHT_X = 8160;
+    private static final double RIGHT_Y = 6130; // force 8275.0 6100
 
     public static final double TILE_WIDTH = (RIGHT_Y - LEFT_Y) / 7;
     public static final StepPosition BOARD_BOTTOM_LEFT = new StepPosition(LEFT_X, LEFT_Y);
