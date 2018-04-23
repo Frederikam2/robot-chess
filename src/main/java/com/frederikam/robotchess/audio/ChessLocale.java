@@ -25,6 +25,7 @@ public abstract class ChessLocale {
                 return Optional.of(Rook.class);
             case "bishop":
             case "biskop":
+            case "løber":
                 return Optional.of(Bishop.class);
             case "springer":
             case "knight":
