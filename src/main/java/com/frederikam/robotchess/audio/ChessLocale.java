@@ -13,7 +13,7 @@ public abstract class ChessLocale {
 
     abstract List<String> getKeywords();
 
-    static Optional<Class<? extends ChessPiece>> interpretChessPiece(String s) {
+n     static Optional<Class<? extends ChessPiece>> interpretChessPiece(String s) {
         switch (s.toLowerCase()) {
             case "pawn":
             case "bonde":
@@ -25,6 +25,7 @@ public abstract class ChessLocale {
                 return Optional.of(Rook.class);
             case "bishop":
             case "biskop":
+            case "løber":
                 return Optional.of(Bishop.class);
             case "springer":
             case "knight":
