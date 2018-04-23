@@ -79,6 +79,12 @@ public class Chessboard {
         log.info("\n" + getBoardStateString());
     }
 
+    void onReset() {
+        playerOfTurn = Alignment.WHITE; // White always begins first
+        whiteDead = 0;
+        blackDead = 0;
+    }
+
     public String getBoardStateString() {
         StringBuilder b = new StringBuilder();
         b.append("┌──┬────────┬──┐\n");

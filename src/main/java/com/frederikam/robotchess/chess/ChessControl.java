@@ -24,10 +24,12 @@ public class ChessControl {
     }
 
     public boolean move(TilePosition from, TilePosition to, boolean force) {
+        if (from.equals(to)) return false;
+
         Optional<ChessPiece> pieceFrom = chessboard.getPieceAt(from);
         Optional<ChessPiece> pieceTo = chessboard.getPieceAt(to);
 
-        if (from.isOutOfBounds()) {
+        if (from.isOutOfBounds() && !force) {
             log.warn("Can't move out of bounds");
             return false;
         }
@@ -144,6 +146,7 @@ public class ChessControl {
     public void resetBoard() {
         log.info("Reset board requested");
         chessboard.getPieces().forEach((p) -> move(p.getPosition(), p.getStartPosition(), true));
+        chessboard.onReset();
     }
 
     public MechanicalControl getMechanicalControl() {

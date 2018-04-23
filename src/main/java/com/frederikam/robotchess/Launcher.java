@@ -29,7 +29,7 @@ public class Launcher {
 
         ChessControl chessControl = new ChessControl(chessboard);
         ChessLocale loc = new  ChessLocale.Danish();
-        SpeechService speechService = new SpeechService(chessControl, loc, SpeechService.generateHeaders(loc));
+        SpeechService speechService = new SpeechService(chessControl, SpeechService.generateHeaders(loc));
         new CliInputManager(chessControl, speechService, System.in).start();
 
         if (gpio != null) {
