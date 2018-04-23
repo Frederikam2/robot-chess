@@ -13,7 +13,7 @@ public abstract class ChessLocale {
 
     abstract List<String> getKeywords();
 
-n     static Optional<Class<? extends ChessPiece>> interpretChessPiece(String s) {
+    static Optional<Class<? extends ChessPiece>> interpretChessPiece(String s) {
         switch (s.toLowerCase()) {
             case "pawn":
             case "bonde":
