@@ -46,7 +46,10 @@ public class ChessControl {
             // A piece is here, so we should kill it first
             chessboard.sendToGraveyard(chessPiece);
             boolean direct = canMoveDirect(to, chessPiece.getPosition());
-            mechanicalControl.queueDragAndDrop(to.toStepPosition(), chessPiece.getPosition().toStepPosition(), direct);
+            mechanicalControl.queueDragAndDrop(
+                    to.toStepPosition(),
+                    chessPiece.getPosition().toStepPosition(),
+                    direct);
         });
 
         // Now finally move the actual piece
